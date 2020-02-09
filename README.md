@@ -8,6 +8,7 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 
 ## Introduction
 
+THis module deploys a basic *Cloudtrail* set-up, with kms key and *S3* log bucket.
 
 ## Usage
 
@@ -17,6 +18,7 @@ Include this repository as a module in your existing terraform code:
 module "cloudtrail" {
   source            = "JamesWoolfenden/cloudtrail/aws"
   version           = "0.0.4"
+  common_tags       = var.common_tags
 }
 ```
 
