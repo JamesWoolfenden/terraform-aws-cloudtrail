@@ -8,6 +8,7 @@ resource "aws_s3_bucket" "trails" {
     #mfa_delete = true
   }
 
+
   policy = <<POLICY
 {
     "Version": "2012-10-17",
@@ -38,6 +39,15 @@ resource "aws_s3_bucket" "trails" {
     ]
 }
 POLICY
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        #kms_master_key_id = aws_kms_key.trails.arn
+        sse_algorithm = "AES256"
+      }
+    }
+  }
 
   tags = var.common_tags
 }

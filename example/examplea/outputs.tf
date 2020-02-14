@@ -9,7 +9,3 @@ output "trail" {
 output "bucket" {
   value = module.cloudtrail.bucket
 }
-
-output "key" {
-  value = module.cloudtrail.key
-}

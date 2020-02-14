@@ -18,3 +18,4 @@ lambda
 *~HEAD
 *backup
 *.bak
+*.lock.info

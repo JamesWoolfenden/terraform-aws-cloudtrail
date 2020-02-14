@@ -11,3 +11,22 @@ variable "trail" {
     include_global_service_events = false
   }
 }
+
+
+variable "sns_topic_name" {
+  description = ""
+  type        = string
+  default     = ""
+}
+
+variable "cloud_watch_logs_role_arn" {
+  description = ""
+  type        = string
+  default     = ""
+}
+
+variable "cloud_watch_logs_group_arn" {
+  description = ""
+  type        = string
+  default     = ""
+}

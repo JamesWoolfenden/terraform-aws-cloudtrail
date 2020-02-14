@@ -33,7 +33,10 @@ module "cloudtrail" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:-----:|
+| cloud\_watch\_logs\_group\_arn | n/a | `string` | `""` | no |
+| cloud\_watch\_logs\_role\_arn | n/a | `string` | `""` | no |
 | common\_tags | This is to help you add tags to your cloud objects | `map` | n/a | yes |
+| sns\_topic\_name | n/a | `string` | `""` | no |
 | trail | n/a | `map` | <pre>{<br>  "include_global_service_events": false,<br>  "name": "tf-trail-account",<br>  "s3_key_prefix": "prefix"<br>}<br></pre> | no |
 
 ## Outputs
@@ -41,7 +44,6 @@ module "cloudtrail" {
 | Name | Description |
 |------|-------------|
 | bucket | n/a |
-| key | n/a |
 | service\_account | n/a |
 | trail | n/a |
 

@@ -9,7 +9,3 @@ output "trail" {
 output "bucket" {
   value = aws_s3_bucket.trails
 }
-
-output "key" {
-  value = aws_kms_key.trails
-}
