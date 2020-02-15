@@ -2,6 +2,7 @@
 
 # terraform-aws-cloudtrail [![Build Status](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail/workflows/Verify%20and%20Bump/badge.svg?branch=master)](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail) [![Latest Release](https://img.shields.io/github/release/JamesWoolfenden/terraform-aws-cloudtrail.svg)](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail/releases/latest)
 
+This is a basic example for using Cloudtrail.
 ---
 
 It's 100% Open Source and licensed under the [APACHE2](LICENSE).
@@ -52,17 +53,17 @@ module "cloudtrail" {
 
 **Got a question?**
 
-File a GitHub [issue](https://github.com/JamesWoolfenden/terraform-cloudtrail/issues).
+File a GitHub [issue](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail/issues).
 
 ## Contributing
 
 ### Bug Reports & Feature Requests
 
-Please use the [issue tracker](https://github.com/JamesWoolfenden/terraform-cloudtrail/issues) to report any bugs or file feature requests.
+Please use the [issue tracker](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail/issues) to report any bugs or file feature requests.
 
 ## Copyrights
 
-Copyright � 2019-2020 [Slalom, LLC](https://slalom.com)
+Copyright © 2019-2020 [Slalom, LLC](https://slalom.com)
 
 ## License
 
@@ -98,8 +99,8 @@ under the License.
 [github]: https://github.com/jameswoolfenden
 [linkedin]: https://www.linkedin.com/company/slalom-consulting/
 [twitter]: https://twitter.com/Slalom
-[share_twitter]: https://twitter.com/intent/tweet/?text=terraform-cloudtrail&url=https://github.com/JamesWoolfenden/terraform-cloudtrail
-[share_linkedin]: https://www.linkedin.com/shareArticle?mini=true&title=terraform-cloudtrail&url=https://github.com/JamesWoolfenden/terraform-cloudtrail
-[share_reddit]: https://reddit.com/submit/?url=https://github.com/JamesWoolfenden/terraform-cloudtrail
-[share_facebook]: https://facebook.com/sharer/sharer.php?u=https://github.com/JamesWoolfenden/terraform-cloudtrail
-[share_email]: mailto:?subject=terraform-cloudtrail&body=https://github.com/JamesWoolfenden/terraform-cloudtrail
+[share_twitter]: https://twitter.com/intent/tweet/?text=terraform-aws-cloudtrail&url=https://github.com/JamesWoolfenden/terraform-cloudtrail
+[share_linkedin]: https://www.linkedin.com/shareArticle?mini=true&title=terraform-aws-cloudtrail&url=https://github.com/JamesWoolfenden/terraform-cloudtrail
+[share_reddit]: https://reddit.com/submit/?url=https://github.com/JamesWoolfenden/terraform-aws-cloudtrail
+[share_facebook]: https://facebook.com/sharer/sharer.php?u=https://github.com/JamesWoolfenden/terraform-aws-cloudtrail
+[share_email]: mailto:?subject=terraform-aws-cloudtrail&body=https://github.com/JamesWoolfenden/terraform-aws-cloudtrail

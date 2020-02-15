@@ -4,6 +4,7 @@ variable "common_tags" {
 }
 
 variable "trail" {
+description="Basic Settings for Cloudtrail"
   type = map
   default = {
     name                          = "tf-trail-account"
