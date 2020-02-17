@@ -3,11 +3,15 @@ repos:
   - repo: git://github.com/pre-commit/pre-commit-hooks
     rev: v2.5.0
     hooks:
+      - id: check-json
+      - id: check-merge-conflict
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-added-large-files
-      - id: check-merge-conflict
+      - id: pretty-format-json
+        args:
+          - --autofix
       - id: detect-aws-credentials
       - id: detect-private-key
   - repo: git://github.com/Lucas-C/pre-commit-hooks
@@ -16,11 +20,6 @@ repos:
       - id: forbid-tabs
         exclude_types: [python, javascript, dtd, markdown, makefile, xml]
         exclude: binary|\.bin$
-  - repo: git://github.com/kintoandar/pre-commit
-    rev: v2.1.0
-    hooks:
-      - id: terraform_fmt
-
   - repo: git://github.com/detailyang/pre-commit-shell
     rev: 1.0.5
     hooks:
@@ -47,8 +46,9 @@ repos:
     hooks:
       - id: prettier
         exclude_types: [markdown]
-  - repo: git://github.com/bridgecrewio/checkov
-    rev: 1.0.173
+  - repo: git://github.com/jameswoolfenden/pre-commit
+    rev: 0.0.19
     hooks:
-      - id: checkov
-        files: \.tf$
+      - id: terraform-fmt
+      - id: checkov-scan
+        language_version: python3.7
