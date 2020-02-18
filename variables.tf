@@ -4,8 +4,8 @@ variable "common_tags" {
 }
 
 variable "trail" {
-description="Basic Settings for Cloudtrail"
-  type = map
+  description = "Basic Settings for Cloudtrail"
+  type        = map
   default = {
     name                          = "tf-trail-account"
     s3_key_prefix                 = "prefix"

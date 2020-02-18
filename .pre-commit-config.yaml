@@ -1,4 +1,5 @@
 ---
+# yamllint disable rule:line-length
 repos:
   - repo: git://github.com/pre-commit/pre-commit-hooks
     rev: v2.5.0
@@ -41,13 +42,8 @@ repos:
     rev: v1.25.0
     hooks:
       - id: terraform_docs
-  - repo: git://github.com/prettier/prettier
-    rev: 1.19.1
-    hooks:
-      - id: prettier
-        exclude_types: [markdown]
   - repo: git://github.com/jameswoolfenden/pre-commit
-    rev: 0.0.19
+    rev: 0.0.20
     hooks:
       - id: terraform-fmt
       - id: checkov-scan
