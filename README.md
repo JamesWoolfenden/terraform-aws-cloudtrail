@@ -1,8 +1,14 @@
 [![Slalom][logo]](https://slalom.com)
 
-# terraform-aws-cloudtrail [![Build Status](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail/workflows/Verify%20and%20Bump/badge.svg?branch=master)](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail) [![Latest Release](https://img.shields.io/github/release/JamesWoolfenden/terraform-aws-cloudtrail.svg)](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail/releases/latest)  [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+# terraform-aws-cloudtrail
+
+[![Build Status](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail/workflows/Verify%20and%20Bump/badge.svg?branch=master)](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail)
+[![Latest Release](https://img.shields.io/github/release/JamesWoolfenden/terraform-aws-cloudtrail.svg)](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail/releases/latest)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+[![pre-commit](https://img.shields.io/badge/checkov-verified-brightgreen)](https://www.checkov.io/)
 
 This is a basic example for using Cloudtrail.
+
 ---
 
 It's 100% Open Source and licensed under the [APACHE2](LICENSE).
@@ -23,7 +29,7 @@ module "cloudtrail" {
 }
 ```
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Providers
 
 | Name | Version |
@@ -37,8 +43,11 @@ module "cloudtrail" {
 | cloud\_watch\_logs\_group\_arn | n/a | `string` | `""` | no |
 | cloud\_watch\_logs\_role\_arn | n/a | `string` | `""` | no |
 | common\_tags | This is to help you add tags to your cloud objects | `map` | n/a | yes |
+| enable\_log\_file\_validation | n/a | `bool` | `true` | no |
+| enable\_logging | n/a | `bool` | `true` | no |
+| logging | n/a | `map` | <pre>{<br>  "target_bucket": "youshouldsetyourown",<br>  "target_prefix": "cloudwatch"<br>}</pre> | no |
 | sns\_topic\_name | n/a | `string` | `""` | no |
-| trail | Basic Settings for Cloudtrail | `map` | <pre>{<br>  "include_global_service_events": false,<br>  "name": "tf-trail-account",<br>  "s3_key_prefix": "prefix"<br>}<br></pre> | no |
+| trail | Basic Settings for Cloudtrail | `map` | <pre>{<br>  "include_global_service_events": false,<br>  "name": "tf-trail-account",<br>  "s3_key_prefix": "prefix"<br>}</pre> | no |
 
 ## Outputs
 

@@ -31,3 +31,20 @@ variable "cloud_watch_logs_group_arn" {
   type        = string
   default     = ""
 }
+
+variable "enable_log_file_validation" {
+  type    = bool
+  default = true
+}
+
+variable "enable_logging" {
+  type    = bool
+  default = true
+}
+
+variable "logging" {
+  default = {
+    target_bucket = "youshouldsetyourown"
+    target_prefix = "cloudwatch"
+  }
+}

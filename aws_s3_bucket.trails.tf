@@ -8,6 +8,12 @@ resource "aws_s3_bucket" "trails" {
     #mfa_delete = true
   }
 
+  logging {
+    target_bucket = var.logging["target_bucket"]
+    target_prefix = var.logging["target_prefix"]
+  }
+
+
 
   policy = <<POLICY
 {
