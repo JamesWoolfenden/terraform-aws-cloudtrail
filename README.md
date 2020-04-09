@@ -40,12 +40,13 @@ module "cloudtrail" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:-----:|
-| cloud\_watch\_logs\_group\_arn | n/a | `string` | `""` | no |
-| cloud\_watch\_logs\_role\_arn | n/a | `string` | `""` | no |
+| cloud\_watch\_logs\_group\_arn | ARN for Cloudwatch logs group | `string` | `""` | no |
+| cloud\_watch\_logs\_role\_arn | Role ARN for Cloudwatch logs | `string` | `""` | no |
 | common\_tags | This is to help you add tags to your cloud objects | `map` | n/a | yes |
-| enable\_log\_file\_validation | n/a | `bool` | `true` | no |
+| enable\_log\_file\_validation | Bool to enable log file validation | `bool` | `true` | no |
 | enable\_logging | n/a | `bool` | `true` | no |
-| logging | n/a | `map` | <pre>{<br>  "target_bucket": "youshouldsetyourown",<br>  "target_prefix": "cloudwatch"<br>}</pre> | no |
+| is\_multi\_region\_trail | Is this a multiregion trail? | `bool` | `false` | no |
+| is\_organization\_trail | Is this for an organisation? | `bool` | `false` | no |
 | sns\_topic\_name | n/a | `string` | `""` | no |
 | trail | Basic Settings for Cloudtrail | `map` | <pre>{<br>  "include_global_service_events": false,<br>  "name": "tf-trail-account",<br>  "s3_key_prefix": "prefix"<br>}</pre> | no |
 

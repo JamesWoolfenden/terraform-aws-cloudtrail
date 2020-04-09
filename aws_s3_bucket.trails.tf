@@ -5,12 +5,11 @@ resource "aws_s3_bucket" "trails" {
   acl           = "private"
   versioning {
     enabled = true
-    #mfa_delete = true
   }
 
   logging {
-    target_bucket = var.logging["target_bucket"]
-    target_prefix = var.logging["target_prefix"]
+    target_bucket = local.logging["target_bucket"]
+    target_prefix = local.logging["target_prefix"]
   }
 
 

@@ -13,7 +13,6 @@ variable "trail" {
   }
 }
 
-
 variable "sns_topic_name" {
   description = ""
   type        = string
@@ -21,20 +20,21 @@ variable "sns_topic_name" {
 }
 
 variable "cloud_watch_logs_role_arn" {
-  description = ""
+  description = "Role ARN for Cloudwatch logs"
   type        = string
   default     = ""
 }
 
 variable "cloud_watch_logs_group_arn" {
-  description = ""
+  description = "ARN for Cloudwatch logs group"
   type        = string
   default     = ""
 }
 
 variable "enable_log_file_validation" {
-  type    = bool
-  default = true
+  description = "Bool to enable log file validation"
+  type        = bool
+  default     = true
 }
 
 variable "enable_logging" {
@@ -42,9 +42,14 @@ variable "enable_logging" {
   default = true
 }
 
-variable "logging" {
-  default = {
-    target_bucket = "youshouldsetyourown"
-    target_prefix = "cloudwatch"
-  }
+variable "is_multi_region_trail" {
+  description = "Is this a multiregion trail?"
+  type        = bool
+  default     = false
+}
+
+variable "is_organization_trail" {
+  description = "Is this for an organisation?"
+  type        = bool
+  default     = false
 }
