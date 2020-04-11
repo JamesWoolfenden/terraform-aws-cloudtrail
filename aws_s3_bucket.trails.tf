@@ -4,7 +4,8 @@ resource "aws_s3_bucket" "trails" {
   force_destroy = true
   acl           = "private"
   versioning {
-    enabled = true
+    enabled    = true
+    mfa_delete = true
   }
 
   logging {
