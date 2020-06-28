@@ -43,9 +43,9 @@ variable "enable_logging" {
 }
 
 variable "is_multi_region_trail" {
-  description = "Is this a multiregion trail?"
+  description = "Is this a multi-region trail? Secure option is default"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "is_organization_trail" {

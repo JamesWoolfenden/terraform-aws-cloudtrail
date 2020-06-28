@@ -30,6 +30,10 @@ module "cloudtrail" {
 ```
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
+
+No requirements.
+
 ## Providers
 
 | Name | Version |
@@ -39,16 +43,16 @@ module "cloudtrail" {
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:-----:|
+|------|-------------|------|---------|:--------:|
 | cloud\_watch\_logs\_group\_arn | ARN for Cloudwatch logs group | `string` | `""` | no |
 | cloud\_watch\_logs\_role\_arn | Role ARN for Cloudwatch logs | `string` | `""` | no |
 | common\_tags | This is to help you add tags to your cloud objects | `map` | n/a | yes |
 | enable\_log\_file\_validation | Bool to enable log file validation | `bool` | `true` | no |
 | enable\_logging | n/a | `bool` | `true` | no |
-| is\_multi\_region\_trail | Is this a multiregion trail? | `bool` | `false` | no |
+| is\_multi\_region\_trail | Is this a multi-region trail? Secure option is default | `bool` | `true` | no |
 | is\_organization\_trail | Is this for an organisation? | `bool` | `false` | no |
 | sns\_topic\_name | n/a | `string` | `""` | no |
-| trail | Basic Settings for Cloudtrail | `map` | <pre>{<br>  "include_global_service_events": false,<br>  "name": "tf-trail-account",<br>  "s3_key_prefix": "prefix"<br>}<br></pre> | no |
+| trail | Basic Settings for Cloudtrail | `map` | <pre>{<br>  "include_global_service_events": false,<br>  "name": "tf-trail-account",<br>  "s3_key_prefix": "prefix"<br>}</pre> | no |
 
 ## Outputs
 
@@ -107,8 +111,8 @@ under the License.
 [logo]: https://gist.githubusercontent.com/JamesWoolfenden/5c457434351e9fe732ca22b78fdd7d5e/raw/15933294ae2b00f5dba6557d2be88f4b4da21201/slalom-logo.png
 [website]: https://slalom.com
 [github]: https://github.com/jameswoolfenden
-[linkedin]: https://www.linkedin.com/company/slalom-consulting/
-[twitter]: https://twitter.com/Slalom
+[linkedin]: https://www.linkedin.com/in/jameswoolfenden/
+[twitter]: https://twitter.com/JimWoolfenden
 [share_twitter]: https://twitter.com/intent/tweet/?text=terraform-aws-cloudtrail&url=https://github.com/JamesWoolfenden/terraform-cloudtrail
 [share_linkedin]: https://www.linkedin.com/shareArticle?mini=true&title=terraform-aws-cloudtrail&url=https://github.com/JamesWoolfenden/terraform-cloudtrail
 [share_reddit]: https://reddit.com/submit/?url=https://github.com/JamesWoolfenden/terraform-aws-cloudtrail
