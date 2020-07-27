@@ -24,10 +24,14 @@ Include this repository as a module in your existing terraform code:
 ```hcl
 module "cloudtrail" {
   source            = "JamesWoolfenden/cloudtrail/aws"
-  version           = "0.0.4"
+  version           = "0.1.0"
   common_tags       = var.common_tags
 }
 ```
+
+## Checks
+
+This module has a Checkov skip added as the MFA_delete functionality is currently broken in Terraform 0.12.8. I have added an ignore so that you can manually update this item without interference.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -51,6 +55,7 @@ No requirements.
 | enable\_logging | n/a | `bool` | `true` | no |
 | is\_multi\_region\_trail | Is this a multi-region trail? Secure option is default | `bool` | `true` | no |
 | is\_organization\_trail | Is this for an organisation? | `bool` | `false` | no |
+| mfa\_delete | Terraform wont currently work with this set on, disabling by default with an ignore on changes | `bool` | n/a | yes |
 | sns\_topic\_name | n/a | `string` | `""` | no |
 | trail | Basic Settings for Cloudtrail | `map` | <pre>{<br>  "include_global_service_events": false,<br>  "name": "tf-trail-account",<br>  "s3_key_prefix": "prefix"<br>}</pre> | no |
 
