@@ -5,17 +5,11 @@ resource "aws_s3_bucket" "trails" {
   acl           = "private"
 
   #checkov:skip=CKV_AWS_52: "Ensure S3 bucket has MFA delete enabled"
+  #checkov:skip=CKV_AWS_18: "Ensure the S3 bucket has access logging enabled"
   versioning {
     enabled    = true
-    mfa_delete = false
+    mfa_delete = var.mfa_delete
   }
-
-  logging {
-    target_bucket = local.logging["target_bucket"]
-    target_prefix = local.logging["target_prefix"]
-  }
-
-
 
   policy = <<POLICY
 {
@@ -70,4 +64,5 @@ POLICY
 variable "mfa_delete" {
   type        = bool
   description = "Terraform wont currently work with this set on, disabling by default with an ignore on changes"
+  default     = false
 }

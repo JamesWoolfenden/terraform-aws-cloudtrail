@@ -7,7 +7,7 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![checkov](https://img.shields.io/badge/checkov-verified-brightgreen)](https://www.checkov.io/)
 
-This is a basic example for using Cloudtrail.
+This is an example for using Cloudtrail.
 
 ---
 
@@ -55,7 +55,7 @@ No requirements.
 | enable\_logging | n/a | `bool` | `true` | no |
 | is\_multi\_region\_trail | Is this a multi-region trail? Secure option is default | `bool` | `true` | no |
 | is\_organization\_trail | Is this for an organisation? | `bool` | `false` | no |
-| mfa\_delete | Terraform wont currently work with this set on, disabling by default with an ignore on changes | `bool` | n/a | yes |
+| mfa\_delete | Terraform wont currently work with this set on, disabling by default with an ignore on changes | `bool` | `false` | no |
 | sns\_topic\_name | n/a | `string` | `""` | no |
 | trail | Basic Settings for Cloudtrail | `map` | <pre>{<br>  "include_global_service_events": false,<br>  "name": "tf-trail-account",<br>  "s3_key_prefix": "prefix"<br>}</pre> | no |
 
@@ -64,6 +64,7 @@ No requirements.
 | Name | Description |
 |------|-------------|
 | bucket | n/a |
+| kms | n/a |
 | service\_account | n/a |
 | trail | n/a |
 

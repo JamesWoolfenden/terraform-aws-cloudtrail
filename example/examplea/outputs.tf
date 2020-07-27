@@ -9,3 +9,7 @@ output "trail" {
 output "bucket" {
   value = module.cloudtrail.bucket
 }
+
+output "kms" {
+  value = module.cloudtrail.kms
+}
