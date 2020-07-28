@@ -7,7 +7,7 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![checkov](https://img.shields.io/badge/checkov-verified-brightgreen)](https://www.checkov.io/)
 
-This is an example for using Cloudtrail.
+This is an updated example for using Cloudtrail that works.
 
 ---
 
