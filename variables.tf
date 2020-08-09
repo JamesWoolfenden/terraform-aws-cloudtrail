@@ -14,7 +14,7 @@ variable "trail" {
 }
 
 variable "sns_topic_name" {
-  description = ""
+  description = "The name of the SNS topic"
   type        = string
   default     = ""
 }
@@ -38,8 +38,9 @@ variable "enable_log_file_validation" {
 }
 
 variable "enable_logging" {
-  type    = bool
-  default = true
+  description = "Toggle logging"
+  type        = bool
+  default     = true
 }
 
 variable "is_multi_region_trail" {

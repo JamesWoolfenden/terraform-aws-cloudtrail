@@ -7,7 +7,7 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![checkov](https://img.shields.io/badge/checkov-verified-brightgreen)](https://www.checkov.io/)
 
-This is an updated example for using Cloudtrail that works.
+This is an updated example for using Cloudtrail that works, in addition to the trail Glue is added to support querying in Athena.
 
 ---
 
@@ -15,7 +15,7 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 
 ## Introduction
 
-THis module deploys a basic *Cloudtrail* set-up, with kms key and *S3* log bucket and sets up a table for Athena with AWS Glue.
+This module deploys a basic *Cloudtrail* set-up, with kms key and *S3* log bucket and sets up a table for Athena with AWS Glue.
 
 ## Usage
 
@@ -24,7 +24,8 @@ Include this repository as a module in your existing terraform code:
 ```hcl
 module "cloudtrail" {
   source            = "JamesWoolfenden/cloudtrail/aws"
-  version           = "0.1.0"
+  version           = "v0.1.3"
+  trail             = var.trail
   common_tags       = var.common_tags
 }
 ```
@@ -52,11 +53,11 @@ No requirements.
 | cloud\_watch\_logs\_role\_arn | Role ARN for Cloudwatch logs | `string` | `""` | no |
 | common\_tags | This is to help you add tags to your cloud objects | `map` | n/a | yes |
 | enable\_log\_file\_validation | Bool to enable log file validation | `bool` | `true` | no |
-| enable\_logging | n/a | `bool` | `true` | no |
+| enable\_logging | Toggle logging | `bool` | `true` | no |
 | is\_multi\_region\_trail | Is this a multi-region trail? Secure option is default | `bool` | `true` | no |
 | is\_organization\_trail | Is this for an organisation? | `bool` | `false` | no |
 | mfa\_delete | Terraform wont currently work with this set on, disabling by default with an ignore on changes | `bool` | `false` | no |
-| sns\_topic\_name | n/a | `string` | `""` | no |
+| sns\_topic\_name | The name of the SNS topic | `string` | `""` | no |
 | trail | Basic Settings for Cloudtrail | `map` | <pre>{<br>  "include_global_service_events": false,<br>  "name": "tf-trail-account",<br>  "s3_key_prefix": "prefix"<br>}</pre> | no |
 
 ## Outputs
