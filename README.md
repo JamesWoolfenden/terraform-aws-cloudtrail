@@ -33,7 +33,6 @@ module "cloudtrail" {
 This module has a Checkov skip added as the MFA_delete functionality is currently broken in Terraform 0.12.8. I have added an ignore so that you can manually update this item without interference.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-
 ## Requirements
 
 No requirements.
@@ -41,32 +40,32 @@ No requirements.
 ## Providers
 
 | Name | Version |
-| ---- | ------- |
-| aws  | n/a     |
+|------|---------|
+| aws | n/a |
 
 ## Inputs
 
-| Name                       | Description                                                                                    | Type     | Default                                                                                                                     | Required |
-| -------------------------- | ---------------------------------------------------------------------------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------- | :------: |
-| cloud_watch_logs_group_arn | ARN for Cloudwatch logs group                                                                  | `string` | `""`                                                                                                                        |    no    |
-| cloud_watch_logs_role_arn  | Role ARN for Cloudwatch logs                                                                   | `string` | `""`                                                                                                                        |    no    |
-| common_tags                | This is to help you add tags to your cloud objects                                             | `map`    | n/a                                                                                                                         |   yes    |
-| enable_log_file_validation | Bool to enable log file validation                                                             | `bool`   | `true`                                                                                                                      |    no    |
-| enable_logging             | Toggle logging                                                                                 | `bool`   | `true`                                                                                                                      |    no    |
-| is_multi_region_trail      | Is this a multi-region trail? Secure option is default                                         | `bool`   | `true`                                                                                                                      |    no    |
-| is_organization_trail      | Is this for an organisation?                                                                   | `bool`   | `false`                                                                                                                     |    no    |
-| mfa_delete                 | Terraform wont currently work with this set on, disabling by default with an ignore on changes | `bool`   | `false`                                                                                                                     |    no    |
-| sns_topic_name             | The name of the SNS topic                                                                      | `string` | `""`                                                                                                                        |    no    |
-| trail                      | Basic Settings for Cloudtrail                                                                  | `map`    | <pre>{<br> "include_global_service_events": false,<br> "name": "tf-trail-account",<br> "s3_key_prefix": "prefix"<br>}</pre> |    no    |
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| cloud\_watch\_logs\_group\_arn | ARN for Cloudwatch logs group | `string` | `""` | no |
+| cloud\_watch\_logs\_role\_arn | Role ARN for Cloudwatch logs | `string` | `""` | no |
+| common\_tags | This is to help you add tags to your cloud objects | `map` | n/a | yes |
+| enable\_log\_file\_validation | Bool to enable log file validation | `bool` | `true` | no |
+| enable\_logging | Toggle logging | `bool` | `true` | no |
+| is\_multi\_region\_trail | Is this a multi-region trail? Secure option is default | `bool` | `true` | no |
+| is\_organization\_trail | Is this for an organisation? | `bool` | `false` | no |
+| mfa\_delete | Terraform wont currently work with this set on, disabling by default with an ignore on changes | `bool` | `false` | no |
+| sns\_topic\_name | The name of the SNS topic | `string` | `""` | no |
+| trail | Basic Settings for Cloudtrail | `map` | <pre>{<br>  "include_global_service_events": false,<br>  "name": "tf-trail-account",<br>  "s3_key_prefix": "prefix"<br>}</pre> | no |
 
 ## Outputs
 
-| Name            | Description |
-| --------------- | ----------- |
-| bucket          | n/a         |
-| kms             | n/a         |
-| service_account | n/a         |
-| trail           | n/a         |
+| Name | Description |
+|------|-------------|
+| bucket | n/a |
+| kms | n/a |
+| service\_account | n/a |
+| trail | n/a |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
