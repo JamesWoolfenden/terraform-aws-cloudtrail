@@ -4,7 +4,7 @@ resource "aws_cloudtrail" "account" {
   cloud_watch_logs_group_arn    = var.cloud_watch_logs_group_arn
   cloud_watch_logs_role_arn     = var.cloud_watch_logs_role_arn
   depends_on                    = [aws_s3_bucket.trails]
-  enable_log_file_validation    = var.enable_log_file_validation
+  enable_log_file_validation    = true
   enable_logging                = var.enable_logging
   include_global_service_events = var.trail["include_global_service_events"]
   is_multi_region_trail         = var.is_multi_region_trail
