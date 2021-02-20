@@ -1,11 +1,11 @@
 variable "common_tags" {
   description = "This is to help you add tags to your cloud objects"
-  type        = map
+  type        = map(any)
 }
 
 variable "trail" {
   description = "Basic Settings for Cloudtrail"
-  type        = map
+  type        = map(any)
   default = {
     name                          = "tf-trail-account"
     s3_key_prefix                 = "prefix"

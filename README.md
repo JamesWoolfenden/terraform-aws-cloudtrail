@@ -47,20 +47,36 @@ No requirements.
 |------|---------|
 | aws | n/a |
 
+## Modules
+
+No Modules.
+
+## Resources
+
+| Name |
+|------|
+| [aws_caller_identity](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) |
+| [aws_cloudtrail_service_account](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/cloudtrail_service_account) |
+| [aws_cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudtrail) |
+| [aws_glue_catalog_table](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/glue_catalog_table) |
+| [aws_kms_alias](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_alias) |
+| [aws_kms_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) |
+| [aws_s3_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) |
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | cloud\_watch\_logs\_group\_arn | ARN for Cloudwatch logs group | `string` | `""` | no |
 | cloud\_watch\_logs\_role\_arn | Role ARN for Cloudwatch logs | `string` | `""` | no |
-| common\_tags | This is to help you add tags to your cloud objects | `map` | n/a | yes |
+| common\_tags | This is to help you add tags to your cloud objects | `map(any)` | n/a | yes |
 | enable\_log\_file\_validation | Bool to enable log file validation | `bool` | `true` | no |
 | enable\_logging | Toggle logging | `bool` | `true` | no |
 | is\_multi\_region\_trail | Is this a multi-region trail? Secure option is default | `bool` | `true` | no |
 | is\_organization\_trail | Is this for an organisation? | `bool` | `false` | no |
 | mfa\_delete | Terraform wont currently work with this set on, disabling by default with an ignore on changes | `bool` | `false` | no |
 | sns\_topic\_name | The name of the SNS topic | `string` | `""` | no |
-| trail | Basic Settings for Cloudtrail | `map` | <pre>{<br>  "include_global_service_events": false,<br>  "name": "tf-trail-account",<br>  "s3_key_prefix": "prefix"<br>}</pre> | no |
+| trail | Basic Settings for Cloudtrail | `map(any)` | <pre>{<br>  "include_global_service_events": false,<br>  "name": "tf-trail-account",<br>  "s3_key_prefix": "prefix"<br>}</pre> | no |
 
 ## Outputs
 
@@ -70,7 +86,6 @@ No requirements.
 | kms | n/a |
 | service\_account | n/a |
 | trail | n/a |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Help
