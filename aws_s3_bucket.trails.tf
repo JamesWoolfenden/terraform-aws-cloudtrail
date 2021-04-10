@@ -1,11 +1,14 @@
 
 resource "aws_s3_bucket" "trails" {
+  # checkov:skip=CKV_AWS_145: ADD REASON
+  # checkov:skip=CKV_AWS_144: ADD REASON
+  # checkov:skip=CKV_AWS_52: "Ensure S3 bucket has MFA delete enabled"
+  # checkov:skip=CKV_AWS_18: "Ensure the S3 bucket has access logging enabled"
   bucket        = local.trails_bucket
   force_destroy = true
   acl           = "private"
 
-  #checkov:skip=CKV_AWS_52: "Ensure S3 bucket has MFA delete enabled"
-  #checkov:skip=CKV_AWS_18: "Ensure the S3 bucket has access logging enabled"
+
   versioning {
     enabled    = true
     mfa_delete = var.mfa_delete
