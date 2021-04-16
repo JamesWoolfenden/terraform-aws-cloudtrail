@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  terraform: 0.14.8
+  terraform: 0.15.0
   tf_target_dir: example/examplea
   branch: master
 jobs:

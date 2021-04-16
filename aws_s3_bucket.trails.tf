@@ -1,4 +1,5 @@
 
+# tfsec:ignore:AWS002
 resource "aws_s3_bucket" "trails" {
   # checkov:skip=CKV_AWS_145: ADD REASON
   # checkov:skip=CKV_AWS_144: ADD REASON
