@@ -17,7 +17,7 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 
 ## Introduction
 
-This module deploys a basic _Cloudtrail_ set-up, with kms key and _S3_ log bucket and sets up a table for Athena with AWS Glue.
+This module deploys a _Cloudtrail_ set-up, with kms key and _S3_ log bucket and sets up a table for Athena with AWS Glue.
 
 ## Usage
 
