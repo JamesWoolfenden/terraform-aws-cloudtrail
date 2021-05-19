@@ -128,6 +128,3 @@ resource "aws_glue_catalog_table" "cloudtrail" {
     }
   }
 }
-
-
-#terraform import module.cloudtrail.aws_glue_catalog_table.cloudtrail 680235478471:default:cloudtrail_logs_trails_680235478471_prefix
