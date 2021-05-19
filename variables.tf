@@ -25,12 +25,6 @@ variable "cloud_watch_logs_role_arn" {
   default     = ""
 }
 
-variable "cloud_watch_logs_group_arn" {
-  description = "ARN for Cloudwatch logs group"
-  type        = string
-  default     = ""
-}
-
 variable "enable_log_file_validation" {
   description = "Bool to enable log file validation"
   type        = bool

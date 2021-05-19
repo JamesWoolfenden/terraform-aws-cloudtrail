@@ -1,7 +1,6 @@
 
 resource "aws_cloudtrail" "account" {
   name                          = var.trail["name"]
-  cloud_watch_logs_group_arn    = var.cloud_watch_logs_group_arn
   cloud_watch_logs_role_arn     = var.cloud_watch_logs_role_arn
   depends_on                    = [aws_s3_bucket.trails]
   enable_log_file_validation    = true
@@ -13,6 +12,6 @@ resource "aws_cloudtrail" "account" {
   s3_bucket_name                = aws_s3_bucket.trails.id
   s3_key_prefix                 = var.trail["s3_key_prefix"]
   sns_topic_name                = var.sns_topic_name
-
-  tags = var.common_tags
+  cloud_watch_logs_group_arn    = "${aws_cloudwatch_log_group.trails.arn}:*"
+  tags                          = var.common_tags
 }
