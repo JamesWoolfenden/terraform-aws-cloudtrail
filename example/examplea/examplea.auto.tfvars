@@ -1,5 +1,5 @@
 common_tags = {
-  "createdby" = "Terraform"
+  createdby = "Terraform"
 module = "terraform-aws-cloudtrail" }
 trail = {
   name                          = "tf-trail-account"

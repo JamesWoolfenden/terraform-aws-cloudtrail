@@ -86,6 +86,7 @@ No modules.
 |------|-------------|
 | <a name="output_bucket"></a> [bucket](#output\_bucket) | n/a |
 | <a name="output_kms"></a> [kms](#output\_kms) | n/a |
+| <a name="output_log_group"></a> [log\_group](#output\_log\_group) | n/a |
 | <a name="output_service_account"></a> [service\_account](#output\_service\_account) | n/a |
 | <a name="output_trail"></a> [trail](#output\_trail) | n/a |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

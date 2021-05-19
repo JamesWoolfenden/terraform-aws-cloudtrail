@@ -13,3 +13,7 @@ output "bucket" {
 output "kms" {
   value = aws_kms_key.cloudtrail
 }
+
+output "log_group" {
+  value = aws_cloudwatch_log_group.trails
+}

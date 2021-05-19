@@ -13,3 +13,8 @@ output "bucket" {
 output "kms" {
   value = module.cloudtrail.kms
 }
+
+
+output "log_group" {
+  value = module.cloudtrail.log_group
+}
