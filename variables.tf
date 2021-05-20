@@ -19,12 +19,6 @@ variable "sns_topic_name" {
   default     = ""
 }
 
-variable "cloud_watch_logs_role_arn" {
-  description = "Role ARN for Cloudwatch logs"
-  type        = string
-  default     = ""
-}
-
 variable "enable_log_file_validation" {
   description = "Bool to enable log file validation"
   type        = bool

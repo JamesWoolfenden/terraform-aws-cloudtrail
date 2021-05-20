@@ -1,7 +1,7 @@
 
 resource "aws_glue_catalog_table" "cloudtrail" {
   name          = "cloudtrail_logs_trails_${data.aws_caller_identity.current.account_id}_prefix"
-  database_name = "default"
+  database_name = aws_glue_catalog_database.cloudtrail.name
   owner         = "hadoop"
   parameters = {
     "EXTERNAL"              = "TRUE"

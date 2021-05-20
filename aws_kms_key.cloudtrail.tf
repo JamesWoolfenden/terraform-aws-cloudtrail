@@ -39,6 +39,25 @@ resource "aws_kms_key" "cloudtrail" {
             "Resource": "*"
         },
         {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "logs.${data.aws_region.current.name}.amazonaws.com"
+            },
+            "Action": [
+                "kms:Encrypt*",
+                "kms:Decrypt*",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*",
+                "kms:Describe*"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "ArnEquals": {
+                    "kms:EncryptionContext:aws:logs:arn": "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:${var.log_group_name}"
+                }
+            }
+        },
+        {
             "Sid": "Allow principals in the account to decrypt log files",
             "Effect": "Allow",
             "Principal": {
