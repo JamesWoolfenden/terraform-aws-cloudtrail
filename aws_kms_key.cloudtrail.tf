@@ -1,4 +1,5 @@
 resource "aws_kms_key" "cloudtrail" {
+  # checkov:skip=CKV_AWS_33: TODO
   enable_key_rotation = true
 
   policy = <<POLICY
