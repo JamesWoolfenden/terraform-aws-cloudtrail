@@ -13,7 +13,6 @@ resource "aws_cloudtrail" "account" {
   s3_key_prefix                 = var.trail["s3_key_prefix"]
   sns_topic_name                = var.sns_topic_name
   cloud_watch_logs_group_arn    = "${aws_cloudwatch_log_group.trails.arn}:*"
-  tags                          = var.common_tags
 }
 
 

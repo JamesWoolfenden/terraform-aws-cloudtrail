@@ -53,16 +53,33 @@ POLICY
       }
     }
   }
+  lifecycle_rule {
+    abort_incomplete_multipart_upload_days = 0
+    enabled                                = true
+    id                                     = "delete after ${var.expiry} days"
 
+    expiration {
+      days                         = var.expiry
+      expired_object_delete_marker = false
+    }
+
+    noncurrent_version_expiration {
+      days = 1
+    }
+  }
   lifecycle {
     ignore_changes = [
       versioning["mfa_delete"]
     ]
   }
-
-  tags = var.common_tags
 }
 
+
+variable "expiry" {
+  type        = number
+  default     = 30
+  description = "Expire logs after this many days"
+}
 
 variable "mfa_delete" {
   type        = bool

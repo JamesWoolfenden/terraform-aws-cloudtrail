@@ -1,4 +1,5 @@
 resource "aws_kms_key" "cloudtrail" {
+  # checkov:skip=CKV_AWS_33: Key policy not iam policy
   enable_key_rotation = true
 
   policy = <<POLICY
@@ -115,8 +116,6 @@ resource "aws_kms_key" "cloudtrail" {
     ]
 }
 POLICY
-
-  tags = var.common_tags
 }
 
 
