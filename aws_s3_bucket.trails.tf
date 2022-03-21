@@ -4,16 +4,16 @@ resource "aws_s3_bucket" "trails" {
   # checkov:skip=CKV_AWS_144: ADD REASON
   # checkov:skip=CKV_AWS_52: "Ensure S3 bucket has MFA delete enabled"
   # checkov:skip=CKV_AWS_18: "Ensure the S3 bucket has access logging enabled"
+  # checkov:skip=CKV2_AWS_41: skip logging
+  # checkov:skip=CKV_AWS_145: v4 legacy
+  # checkov:skip=CKV_AWS_19: v4 legacy
+  # checkov:skip=CKV_AWS_21: v4 legacy
   bucket        = local.trails_bucket
   force_destroy = true
-  acl           = "private"
+}
 
-
-  versioning {
-    enabled    = true
-    mfa_delete = var.mfa_delete
-  }
-
+resource "aws_s3_bucket_policy" "trails" {
+  bucket = aws_s3_bucket.trails.id
   policy = <<POLICY
 {
     "Version": "2012-10-17",
@@ -44,19 +44,19 @@ resource "aws_s3_bucket" "trails" {
     ]
 }
 POLICY
+}
 
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        kms_master_key_id = aws_kms_key.cloudtrail.arn
-        sse_algorithm     = "aws:kms"
-      }
+
+
+resource "aws_s3_bucket_lifecycle_configuration" "trails" {
+  bucket = aws_s3_bucket.trails.id
+
+  rule {
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
     }
-  }
-  lifecycle_rule {
-    abort_incomplete_multipart_upload_days = 0
-    enabled                                = true
-    id                                     = "delete after ${var.expiry} days"
+    status = "Enabled"
+    id     = "delete after ${var.expiry} days"
 
     expiration {
       days                         = var.expiry
@@ -64,25 +64,41 @@ POLICY
     }
 
     noncurrent_version_expiration {
-      days = 1
+      noncurrent_days = 31
     }
-  }
-  lifecycle {
-    ignore_changes = [
-      versioning["mfa_delete"]
-    ]
+
   }
 }
+
+
+resource "aws_s3_bucket_acl" "trails" {
+  bucket = aws_s3_bucket.trails.bucket
+  acl    = "private"
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "trails" {
+  bucket = aws_s3_bucket.trails.bucket
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm     = "aws:kms"
+      kms_master_key_id = aws_kms_key.cloudtrail.arn
+    }
+  }
+
+}
+
+resource "aws_s3_bucket_versioning" "trails" {
+  bucket = aws_s3_bucket.trails.id
+  versioning_configuration {
+    status     = "Enabled"
+    mfa_delete = "Disabled"
+  }
+}
+
 
 
 variable "expiry" {
   type        = number
   default     = 30
   description = "Expire logs after this many days"
-}
-
-variable "mfa_delete" {
-  type        = bool
-  description = "Terraform wont currently work with this set on, disabling by default with an ignore on changes"
-  default     = false
 }
