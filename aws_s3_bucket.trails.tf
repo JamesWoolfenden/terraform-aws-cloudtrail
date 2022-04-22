@@ -34,7 +34,7 @@ resource "aws_s3_bucket_policy" "trails" {
               "Service": "cloudtrail.amazonaws.com"
             },
             "Action": "s3:PutObject",
-            "Resource": "arn:aws:s3:::${local.trails_bucket}/prefix/AWSLogs/${data.aws_caller_identity.current.account_id}/*",
+            "Resource": "arn:aws:s3:::${local.trails_bucket}/${var.trail["s3_key_prefix"]}/AWSLogs/${data.aws_caller_identity.current.account_id}/*",
             "Condition": {
                 "StringEquals": {
                     "s3:x-amz-acl": "bucket-owner-full-control"
