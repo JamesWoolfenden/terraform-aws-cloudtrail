@@ -1,6 +1,6 @@
 
 resource "aws_glue_catalog_table" "cloudtrail" {
-  name          = "cloudtrail_logs_trails_${data.aws_caller_identity.current.account_id}_prefix"
+  name          = "cloudtrail_logs_trails_${data.aws_caller_identity.current.account_id}_${var.trail["s3_key_prefix"]}"
   database_name = aws_glue_catalog_database.cloudtrail.name
   owner         = "hadoop"
   parameters = {
@@ -15,7 +15,7 @@ resource "aws_glue_catalog_table" "cloudtrail" {
     bucket_columns            = []
     compressed                = false
     input_format              = "com.amazon.emr.cloudtrail.CloudTrailInputFormat"
-    location                  = "s3://${local.trails_bucket}/prefix/AWSLogs/${data.aws_caller_identity.current.account_id}/CloudTrail"
+    location                  = "s3://${local.trails_bucket}/${var.trail["s3_key_prefix"]}/AWSLogs/${data.aws_caller_identity.current.account_id}/CloudTrail"
     number_of_buckets         = -1
     output_format             = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
     parameters                = {}
