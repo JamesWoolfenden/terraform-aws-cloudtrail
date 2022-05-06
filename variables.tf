@@ -8,11 +8,6 @@ variable "trail" {
   }
 }
 
-variable "sns_topic_name" {
-  description = "The name of the SNS topic"
-  type        = string
-  default     = ""
-}
 
 variable "enable_log_file_validation" {
   description = "Bool to enable log file validation"

@@ -11,7 +11,7 @@ resource "aws_cloudtrail" "account" {
   kms_key_id                    = aws_kms_key.cloudtrail.arn
   s3_bucket_name                = aws_s3_bucket.trails.id
   s3_key_prefix                 = var.trail["s3_key_prefix"]
-  sns_topic_name                = var.sns_topic_name
+  sns_topic_name                = aws_sns_topic.cloudtrail.name
   cloud_watch_logs_group_arn    = "${aws_cloudwatch_log_group.trails.arn}:*"
 }
 
