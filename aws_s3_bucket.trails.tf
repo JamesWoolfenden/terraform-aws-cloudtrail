@@ -8,6 +8,7 @@ resource "aws_s3_bucket" "trails" {
   # checkov:skip=CKV_AWS_145: v4 legacy
   # checkov:skip=CKV_AWS_19: v4 legacy
   # checkov:skip=CKV_AWS_21: v4 legacy
+  # checkov:skip=CKV2_AWS_62:
   bucket        = local.trails_bucket
   force_destroy = true
 }

@@ -1,6 +1,6 @@
 # terraform-aws-cloudtrail
 
-[![Build Status](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail/workflows/Verify%20and%20Bump/badge.svg?branch=master)](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail)
+[![Build Status](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail/workflows/Verify/badge.svg?branch=master)](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail)
 [![Latest Release](https://img.shields.io/github/release/JamesWoolfenden/terraform-aws-cloudtrail.svg)](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail/releases/latest)
 [![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/JamesWoolfenden/terraform-aws-cloudtrail.svg?label=latest)](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail/releases/latest)
 ![Terraform Version](https://img.shields.io/badge/tf-%3E%3D0.14.0-blue.svg)
@@ -220,7 +220,9 @@ resource "aws_iam_policy" "terraform_pike" {
                 "SNS:ListTagsForResource",
                 "SNS:SetTopicAttributes"
             ],
-            "Resource": "*"
+            "Resource": [
+                "*"
+            ]
         },
         {
             "Sid": "VisualEditor1",
@@ -235,7 +237,9 @@ resource "aws_iam_policy" "terraform_pike" {
                 "cloudtrail:StartLogging",
                 "cloudtrail:UpdateTrail"
             ],
-            "Resource": "*"
+            "Resource": [
+                "*"
+            ]
         },
         {
             "Sid": "VisualEditor2",
@@ -250,7 +254,9 @@ resource "aws_iam_policy" "terraform_pike" {
                 "glue:UpdateDatabase",
                 "glue:UpdateTable"
             ],
-            "Resource": "*"
+            "Resource": [
+                "*"
+            ]
         },
         {
             "Sid": "VisualEditor3",
@@ -267,7 +273,9 @@ resource "aws_iam_policy" "terraform_pike" {
                 "iam:PassRole",
                 "iam:PutRolePolicy"
             ],
-            "Resource": "*"
+            "Resource": [
+                "*"
+            ]
         },
         {
             "Sid": "VisualEditor4",
@@ -285,7 +293,9 @@ resource "aws_iam_policy" "terraform_pike" {
                 "kms:PutKeyPolicy",
                 "kms:ScheduleKeyDeletion"
             ],
-            "Resource": "*"
+            "Resource": [
+                "*"
+            ]
         },
         {
             "Sid": "VisualEditor5",
@@ -300,7 +310,9 @@ resource "aws_iam_policy" "terraform_pike" {
                 "logs:ListTagsLogGroup",
                 "logs:PutRetentionPolicy"
             ],
-            "Resource": "*"
+            "Resource": [
+                "*"
+            ]
         },
         {
             "Sid": "VisualEditor6",
@@ -334,7 +346,9 @@ resource "aws_iam_policy" "terraform_pike" {
                 "s3:PutEncryptionConfiguration",
                 "s3:PutLifecycleConfiguration"
             ],
-            "Resource": "*"
+            "Resource": [
+                "*"
+            ]
         }
     ]
 })
@@ -358,7 +372,7 @@ Please use the [issue tracker](https://github.com/JamesWoolfenden/terraform-aws-
 
 ## Copyrights
 
-Copyright © 2019-2022 James Woolfenden
+Copyright © 2019-2023 James Woolfenden
 
 ## License
 
