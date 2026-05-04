@@ -1,4 +1,3 @@
-
 resource "aws_cloudtrail" "account" {
   name                          = var.trail["name"]
   cloud_watch_logs_role_arn     = aws_iam_role.cloudtrail.arn
@@ -14,8 +13,6 @@ resource "aws_cloudtrail" "account" {
   sns_topic_name                = aws_sns_topic.cloudtrail.name
   cloud_watch_logs_group_arn    = "${aws_cloudwatch_log_group.trails.arn}:*"
 }
-
-
 resource "aws_iam_role" "cloudtrail" {
   assume_role_policy = <<POLICY
 {
@@ -33,7 +30,6 @@ resource "aws_iam_role" "cloudtrail" {
 }
 POLICY
 }
-
 resource "aws_iam_role_policy" "cloudtrail" {
   role   = aws_iam_role.cloudtrail.name
   policy = <<POLICY

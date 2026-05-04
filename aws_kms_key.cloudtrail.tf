@@ -1,4 +1,5 @@
 resource "aws_kms_key" "cloudtrail" {
+  # checkov:skip=CKV2_AWS_64: For example only, key policy managed via IAM
   # checkov:skip=CKV_AWS_33: Key policy not iam policy
   enable_key_rotation = true
 
@@ -117,9 +118,6 @@ resource "aws_kms_key" "cloudtrail" {
 }
 POLICY
 }
-
-
-
 resource "aws_kms_alias" "trails" {
   name          = "alias/cloudtrail"
   target_key_id = aws_kms_key.cloudtrail.key_id

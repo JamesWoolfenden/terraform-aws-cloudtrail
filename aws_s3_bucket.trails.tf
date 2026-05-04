@@ -1,4 +1,3 @@
-
 # tfsec:ignore:AWS002
 resource "aws_s3_bucket" "trails" {
   # checkov:skip=CKV_AWS_144: ADD REASON
@@ -12,7 +11,6 @@ resource "aws_s3_bucket" "trails" {
   bucket        = local.trails_bucket
   force_destroy = true
 }
-
 resource "aws_s3_bucket_policy" "trails" {
   bucket = aws_s3_bucket.trails.id
   policy = <<POLICY
@@ -46,9 +44,6 @@ resource "aws_s3_bucket_policy" "trails" {
 }
 POLICY
 }
-
-
-
 resource "aws_s3_bucket_lifecycle_configuration" "trails" {
   bucket = aws_s3_bucket.trails.id
 
@@ -70,13 +65,10 @@ resource "aws_s3_bucket_lifecycle_configuration" "trails" {
 
   }
 }
-
-
 resource "aws_s3_bucket_acl" "trails" {
   bucket = aws_s3_bucket.trails.bucket
   acl    = "private"
 }
-
 resource "aws_s3_bucket_server_side_encryption_configuration" "trails" {
   bucket = aws_s3_bucket.trails.bucket
   rule {
@@ -87,7 +79,6 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "trails" {
   }
 
 }
-
 resource "aws_s3_bucket_versioning" "trails" {
   bucket = aws_s3_bucket.trails.id
   versioning_configuration {
@@ -95,9 +86,6 @@ resource "aws_s3_bucket_versioning" "trails" {
     mfa_delete = "Disabled"
   }
 }
-
-
-
 variable "expiry" {
   type        = number
   default     = 30
