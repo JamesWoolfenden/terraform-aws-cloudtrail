@@ -214,20 +214,6 @@ resource "aws_iam_policy" "terraform_pike" {
             "Sid": "VisualEditor0",
             "Effect": "Allow",
             "Action": [
-                "SNS:CreateTopic",
-                "SNS:DeleteTopic",
-                "SNS:GetTopicAttributes",
-                "SNS:ListTagsForResource",
-                "SNS:SetTopicAttributes"
-            ],
-            "Resource": [
-                "*"
-            ]
-        },
-        {
-            "Sid": "VisualEditor1",
-            "Effect": "Allow",
-            "Action": [
                 "cloudtrail:CreateTrail",
                 "cloudtrail:DeleteTrail",
                 "cloudtrail:DescribeTrails",
@@ -242,7 +228,7 @@ resource "aws_iam_policy" "terraform_pike" {
             ]
         },
         {
-            "Sid": "VisualEditor2",
+            "Sid": "VisualEditor1",
             "Effect": "Allow",
             "Action": [
                 "glue:CreateDatabase",
@@ -259,7 +245,7 @@ resource "aws_iam_policy" "terraform_pike" {
             ]
         },
         {
-            "Sid": "VisualEditor3",
+            "Sid": "VisualEditor2",
             "Effect": "Allow",
             "Action": [
                 "iam:CreateRole",
@@ -278,7 +264,7 @@ resource "aws_iam_policy" "terraform_pike" {
             ]
         },
         {
-            "Sid": "VisualEditor4",
+            "Sid": "VisualEditor3",
             "Effect": "Allow",
             "Action": [
                 "kms:CreateAlias",
@@ -291,7 +277,26 @@ resource "aws_iam_policy" "terraform_pike" {
                 "kms:ListAliases",
                 "kms:ListResourceTags",
                 "kms:PutKeyPolicy",
-                "kms:ScheduleKeyDeletion"
+                "kms:ScheduleKeyDeletion",
+                "kms:UpdateAlias"
+            ],
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Sid": "VisualEditor4",
+            "Effect": "Allow",
+            "Action": [
+                "logs:AssociateKmsKey",
+                "logs:CreateLogGroup",
+                "logs:DeleteLogGroup",
+                "logs:DeleteRetentionPolicy",
+                "logs:DescribeLogGroups",
+                "logs:DisassociateKmsKey",
+                "logs:ListTagsForResource",
+                "logs:ListTagsLogGroup",
+                "logs:PutRetentionPolicy"
             ],
             "Resource": [
                 "*"
@@ -301,25 +306,9 @@ resource "aws_iam_policy" "terraform_pike" {
             "Sid": "VisualEditor5",
             "Effect": "Allow",
             "Action": [
-                "logs:AssociateKmsKey",
-                "logs:CreateLogGroup",
-                "logs:DeleteLogGroup",
-                "logs:DeleteRetentionPolicy",
-                "logs:DescribeLogGroups",
-                "logs:DisassociateKmsKey",
-                "logs:ListTagsLogGroup",
-                "logs:PutRetentionPolicy"
-            ],
-            "Resource": [
-                "*"
-            ]
-        },
-        {
-            "Sid": "VisualEditor6",
-            "Effect": "Allow",
-            "Action": [
                 "s3:CreateBucket",
                 "s3:DeleteBucket",
+                "s3:DeleteBucketPolicy",
                 "s3:GetAccelerateConfiguration",
                 "s3:GetBucketAcl",
                 "s3:GetBucketCORS",
@@ -345,6 +334,20 @@ resource "aws_iam_policy" "terraform_pike" {
                 "s3:PutBucketVersioning",
                 "s3:PutEncryptionConfiguration",
                 "s3:PutLifecycleConfiguration"
+            ],
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Sid": "VisualEditor6",
+            "Effect": "Allow",
+            "Action": [
+                "sns:CreateTopic",
+                "sns:DeleteTopic",
+                "sns:GetTopicAttributes",
+                "sns:ListTagsForResource",
+                "sns:SetTopicAttributes"
             ],
             "Resource": [
                 "*"
