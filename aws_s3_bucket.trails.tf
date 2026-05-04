@@ -1,5 +1,6 @@
 # tfsec:ignore:AWS002
 resource "aws_s3_bucket" "trails" {
+  # checkov:skip=CKV2_AWS_61: Lifecycle configuration not required for this bucket
   # checkov:skip=CKV_AWS_144: ADD REASON
   # checkov:skip=CKV_AWS_52: "Ensure S3 bucket has MFA delete enabled"
   # checkov:skip=CKV_AWS_18: "Ensure the S3 bucket has access logging enabled"
