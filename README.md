@@ -1,6 +1,6 @@
 # terraform-aws-cloudtrail
 
-[![Build Status](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail/workflows/Verify/badge.svg?branch=master)](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail)
+[![Build Status](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail/workflows/Verify/badge.svg?branch=main)](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail)
 [![Latest Release](https://img.shields.io/github/release/JamesWoolfenden/terraform-aws-cloudtrail.svg)](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail/releases/latest)
 [![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/JamesWoolfenden/terraform-aws-cloudtrail.svg?label=latest)](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail/releases/latest)
 ![Terraform Version](https://img.shields.io/badge/tf-%3E%3D0.14.0-blue.svg)
