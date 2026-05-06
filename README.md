@@ -4,10 +4,8 @@
 [![Latest Release](https://img.shields.io/github/release/JamesWoolfenden/terraform-aws-cloudtrail.svg)](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail/releases/latest)
 [![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/JamesWoolfenden/terraform-aws-cloudtrail.svg?label=latest)](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail/releases/latest)
 ![Terraform Version](https://img.shields.io/badge/tf-%3E%3D0.14.0-blue.svg)
-[![Infrastructure Tests](https://www.bridgecrew.cloud/badges/github/JamesWoolfenden/terraform-aws-cloudtrail/cis_aws)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=JamesWoolfenden%2Fterraform-aws-cloudtrail&benchmark=CIS+AWS+V1.2)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![checkov](https://img.shields.io/badge/checkov-verified-brightgreen)](https://www.checkov.io/)
-[![Infrastructure Tests](https://www.bridgecrew.cloud/badges/github/jameswoolfenden/terraform-aws-cloudtrail/general)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=JamesWoolfenden%2Fterraform-aws-cloudtrail&benchmark=INFRASTRUCTURE+SECURITY)
 
 This is an updated example for using Cloudtrail that works, in addition to the trail Glue is added to support querying in Athena.
 
@@ -31,104 +29,6 @@ module "cloudtrail" {
 }
 ```
 
-## Costs
-
-```text
-Terraform directory at .
-  ✔ Running terraform plan
-  ✔ Running terraform show
-
-✔ Calculating monthly cost estimate
-
-Project: .
-
- Name                                                  Monthly Qty  Unit              Monthly Cost
-
- module.cloudtrail.aws_cloudwatch_log_group.trails
- ├─ Data ingested                                                0  GB                       $0.00
- ├─ Archival Storage                                             0  GB                       $0.00
- └─ Insights queries data scanned                                0  GB                       $0.00
-
- module.cloudtrail.aws_kms_key.cloudtrail
- ├─ Customer master key                                          1  months                   $1.00
- ├─ Requests                                        Cost depends on usage: $0.03 per 10k requests
- ├─ ECC GenerateDataKeyPair requests                Cost depends on usage: $0.10 per 10k requests
- └─ RSA GenerateDataKeyPair requests                Cost depends on usage: $0.10 per 10k requests
-
- module.cloudtrail.aws_s3_bucket.trails
- ├─ Standard - infrequent access
- │  ├─ Storage                                                   0  GB-months                $0.00
- │  ├─ PUT, COPY, POST, LIST requests                            0  1k requests              $0.00
- │  ├─ GET, SELECT, and all other requests                       0  1k requests              $0.00
- │  ├─ Lifecycle transition                                      0  1k requests              $0.00
- │  ├─ Retrievals                                                0  GB-months                $0.00
- │  ├─ Select data scanned                                       0  GB-months                $0.00
- │  └─ Select data returned                                      0  GB-months                $0.00
- ├─ One zone - infrequent access
- │  ├─ Storage                                                   0  GB-months                $0.00
- │  ├─ PUT, COPY, POST, LIST requests                            0  1k requests              $0.00
- │  ├─ GET, SELECT, and all other requests                       0  1k requests              $0.00
- │  ├─ Lifecycle transition                                      0  1k requests              $0.00
- │  ├─ Retrievals                                                0  GB-months                $0.00
- │  ├─ Select data scanned                                       0  GB-months                $0.00
- │  └─ Select data returned                                      0  GB-months                $0.00
- ├─ Glacier
- │  ├─ Storage                                                   0  GB-months                $0.00
- │  ├─ PUT, COPY, POST, LIST requests                            0  1k requests              $0.00
- │  ├─ GET, SELECT, and all other requests                       0  1k requests              $0.00
- │  ├─ Lifecycle transition                                      0  1k requests              $0.00
- │  ├─ Retrieval requests (standard)                             0  1k requests              $0.00
- │  ├─ Retrievals (standard)                                     0  GB-months                $0.00
- │  ├─ Select data scanned (standard)                            0  GB-months                $0.00
- │  ├─ Select data returned (standard)                           0  GB-months                $0.00
- │  ├─ Retrieval requests (expedited)                            0  1k requests              $0.00
- │  ├─ Retrievals (expedited)                                    0  GB-months                $0.00
- │  ├─ Select data scanned (expedited)                           0  GB-months                $0.00
- │  ├─ Select data returned (expedited)                          0  GB-months                $0.00
- │  ├─ Retrieval requests (bulk)                                 0  1k requests              $0.00
- │  ├─ Retrievals (bulk)                                         0  GB-months                $0.00
- │  ├─ Select data scanned (bulk)                                0  GB-months                $0.00
- │  ├─ Select data returned (bulk)                               0  GB-months                $0.00
- │  └─ Early delete (within 90 days)                             0  GB-months                $0.00
- ├─ Glacier deep archive
- │  ├─ Storage                                                   0  GB-months                $0.00
- │  ├─ PUT, COPY, POST, LIST requests                            0  1k requests              $0.00
- │  ├─ GET, SELECT, and all other requests                       0  1k requests              $0.00
- │  ├─ Lifecycle transition                                      0  1k requests              $0.00
- │  ├─ Retrieval requests (standard)                             0  1k requests              $0.00
- │  ├─ Retrievals (standard)                                     0  GB-months                $0.00
- │  ├─ Retrieval requests (bulk)                                 0  1k requests              $0.00
- │  ├─ Retrievals (bulk)                                         0  GB-months                $0.00
- │  └─ Early delete (within 180 days)                            0  GB-months                $0.00
- ├─ Standard
- │  ├─ Storage                                                   0  GB-months                $0.00
- │  ├─ PUT, COPY, POST, LIST requests                            0  1k requests              $0.00
- │  ├─ GET, SELECT, and all other requests                       0  1k requests              $0.00
- │  ├─ Select data scanned                                       0  GB-months                $0.00
- │  └─ Select data returned                                      0  GB-months                $0.00
- └─ Intelligent tiering
-    ├─ Storage (frequent access)                                 0  GB-months                $0.00
-    ├─ Storage (infrequent access)                               0  GB-months                $0.00
-    ├─ Monitoring and automation                                 0  1k objects               $0.00
-    ├─ PUT, COPY, POST, LIST requests                            0  1k requests              $0.00
-    ├─ GET, SELECT, and all other requests                       0  1k requests              $0.00
-    ├─ Lifecycle transition                                      0  1k requests              $0.00
-    ├─ Select data scanned                                       0  GB-months                $0.00
-    ├─ Select data returned                                      0  GB-months                $0.00
-    └─ Early delete (within 30 days)                             0  GB-months                $0.00
-
- PROJECT TOTAL                                                                               $1.00
-
-----------------------------------
-To estimate usage-based resources use --usage-file, see https://infracost.io/usage-file
-
-3 resource types weren't estimated as they're not supported yet.
-Please watch/star https://github.com/infracost/infracost as new resources are added regularly.
-1 x aws_cloudtrail
-1 x aws_glue_catalog_table
-1 x aws_glue_catalog_database
-```
-
 ## Checks
 
 This module has a Checkov skip added as the MFA_delete functionality is currently broken in Terraform 0.12.8. I have added an ignore so that you can manually update this item without interference.
@@ -141,7 +41,7 @@ No requirements.
 ## Providers
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
 
 ## Modules
@@ -151,7 +51,7 @@ No modules.
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [aws_cloudtrail.account](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudtrail) | resource |
 | [aws_cloudwatch_log_group.trails](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_glue_catalog_database.cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/glue_catalog_database) | resource |
@@ -175,7 +75,7 @@ No modules.
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_enable_log_file_validation"></a> [enable\_log\_file\_validation](#input\_enable\_log\_file\_validation) | Bool to enable log file validation | `bool` | `true` | no |
 | <a name="input_enable_logging"></a> [enable\_logging](#input\_enable\_logging) | Toggle logging | `bool` | `true` | no |
 | <a name="input_expiry"></a> [expiry](#input\_expiry) | Expire logs after this many days | `number` | `30` | no |
@@ -183,12 +83,12 @@ No modules.
 | <a name="input_is_organization_trail"></a> [is\_organization\_trail](#input\_is\_organization\_trail) | Is this for an organisation? | `bool` | `false` | no |
 | <a name="input_log_group_name"></a> [log\_group\_name](#input\_log\_group\_name) | n/a | `string` | `"cloudtrail"` | no |
 | <a name="input_retention_in_days"></a> [retention\_in\_days](#input\_retention\_in\_days) | n/a | `number` | `90` | no |
-| <a name="input_trail"></a> [trail](#input\_trail) | Basic Settings for Cloudtrail | `map(any)` | <pre>{<br>  "include_global_service_events": false,<br>  "name": "tf-trail-account",<br>  "s3_key_prefix": "prefix"<br>}</pre> | no |
+| <a name="input_trail"></a> [trail](#input\_trail) | Basic Settings for Cloudtrail | `map(any)` | <pre>{<br/>  "include_global_service_events": false,<br/>  "name": "tf-trail-account",<br/>  "s3_key_prefix": "prefix"<br/>}</pre> | no |
 
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_bucket"></a> [bucket](#output\_bucket) | n/a |
 | <a name="output_kms"></a> [kms](#output\_kms) | n/a |
 | <a name="output_log_group"></a> [log\_group](#output\_log\_group) | n/a |
@@ -375,7 +275,7 @@ Please use the [issue tracker](https://github.com/JamesWoolfenden/terraform-aws-
 
 ## Copyrights
 
-Copyright © 2019-2023 James Woolfenden
+Copyright © 2019-2026 James Woolfenden
 
 ## License
 
