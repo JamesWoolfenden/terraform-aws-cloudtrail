@@ -1,6 +1,5 @@
 # tfsec:ignore:AWS002
 resource "aws_s3_bucket" "trails" {
-  tags   = var.tags
   bucket = local.trails_bucket
   # Object Lock cannot coexist with force_destroy: locked objects cannot be
   # deleted, so a forced teardown would fail part-way through regardless.

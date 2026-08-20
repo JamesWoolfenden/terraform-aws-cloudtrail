@@ -1,5 +1,4 @@
 resource "aws_cloudtrail" "account" {
-  tags                          = var.tags
   name                          = var.trail["name"]
   cloud_watch_logs_role_arn     = aws_iam_role.cloudtrail.arn
   enable_log_file_validation    = var.enable_log_file_validation
@@ -24,7 +23,6 @@ resource "aws_cloudtrail" "account" {
 }
 
 resource "aws_iam_role" "cloudtrail" {
-  tags = var.tags
   # Assumed only by the CloudTrail service for discrete per-delivery work, so
   # the AWS floor of one hour is all this role ever needs.
   max_session_duration = 3600

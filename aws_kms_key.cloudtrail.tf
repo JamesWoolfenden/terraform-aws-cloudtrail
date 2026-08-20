@@ -1,5 +1,4 @@
 resource "aws_kms_key" "cloudtrail" {
-  tags                    = var.tags
   enable_key_rotation     = true
   deletion_window_in_days = 30
 
