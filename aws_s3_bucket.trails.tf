@@ -1,17 +1,12 @@
 # tfsec:ignore:AWS002
 resource "aws_s3_bucket" "trails" {
-  # checkov:skip=CKV2_AWS_61: Lifecycle configuration not required for this bucket
-  # checkov:skip=CKV_AWS_144: ADD REASON
-  # checkov:skip=CKV_AWS_52: "Ensure S3 bucket has MFA delete enabled"
-  # checkov:skip=CKV_AWS_18: "Ensure the S3 bucket has access logging enabled"
-  # checkov:skip=CKV2_AWS_41: skip logging
-  # checkov:skip=CKV_AWS_145: v4 legacy
-  # checkov:skip=CKV_AWS_19: v4 legacy
-  # checkov:skip=CKV_AWS_21: v4 legacy
-  # checkov:skip=CKV2_AWS_62:
-  bucket        = local.trails_bucket
-  force_destroy = true
+  tags   = var.tags
+  bucket = local.trails_bucket
+  # Object Lock cannot coexist with force_destroy: locked objects cannot be
+  # deleted, so a forced teardown would fail part-way through regardless.
+  object_lock_enabled = true
 }
+
 resource "aws_s3_bucket_policy" "trails" {
   bucket = aws_s3_bucket.trails.id
   policy = <<POLICY
@@ -25,7 +20,12 @@ resource "aws_s3_bucket_policy" "trails" {
               "Service": "cloudtrail.amazonaws.com"
             },
             "Action": "s3:GetBucketAcl",
-            "Resource": "arn:aws:s3:::${local.trails_bucket}"
+            "Resource": "arn:aws:s3:::${local.trails_bucket}",
+            "Condition": {
+                "StringEquals": {
+                    "aws:SourceArn": "${local.trail_arn}"
+                }
+            }
         },
         {
             "Sid": "AWSCloudTrailWrite",
@@ -34,10 +34,26 @@ resource "aws_s3_bucket_policy" "trails" {
               "Service": "cloudtrail.amazonaws.com"
             },
             "Action": "s3:PutObject",
-            "Resource": "arn:aws:s3:::${local.trails_bucket}/${var.trail["s3_key_prefix"]}/AWSLogs/${data.aws_caller_identity.current.account_id}/*",
+            "Resource": ${local.trail_write_resources},
             "Condition": {
                 "StringEquals": {
-                    "s3:x-amz-acl": "bucket-owner-full-control"
+                    "s3:x-amz-acl": "bucket-owner-full-control",
+                    "aws:SourceArn": "${local.trail_arn}"
+                }
+            }
+        },
+        {
+            "Sid": "DenyInsecureTransport",
+            "Effect": "Deny",
+            "Principal": "*",
+            "Action": "s3:*",
+            "Resource": [
+                "arn:aws:s3:::${local.trails_bucket}",
+                "arn:aws:s3:::${local.trails_bucket}/*"
+            ],
+            "Condition": {
+                "Bool": {
+                    "aws:SecureTransport": "false"
                 }
             }
         }
@@ -45,6 +61,7 @@ resource "aws_s3_bucket_policy" "trails" {
 }
 POLICY
 }
+
 resource "aws_s3_bucket_lifecycle_configuration" "trails" {
   bucket = aws_s3_bucket.trails.id
 
@@ -66,10 +83,18 @@ resource "aws_s3_bucket_lifecycle_configuration" "trails" {
 
   }
 }
-resource "aws_s3_bucket_acl" "trails" {
-  bucket = aws_s3_bucket.trails.bucket
-  acl    = "private"
+
+# No aws_s3_bucket_acl here on purpose: buckets created since April 2023
+# default to Object Ownership BucketOwnerEnforced, which disables ACLs and
+# makes any aws_s3_bucket_acl fail with AccessControlListNotSupported. That
+# default is already private, and aws_s3_bucket_public_access_block.trails
+# covers the rest.
+resource "aws_s3_bucket_logging" "trails" {
+  bucket        = aws_s3_bucket.trails.id
+  target_bucket = coalesce(var.access_log_bucket, local.logging.target_bucket)
+  target_prefix = local.logging.target_prefix
 }
+
 resource "aws_s3_bucket_server_side_encryption_configuration" "trails" {
   bucket = aws_s3_bucket.trails.bucket
   rule {
@@ -80,6 +105,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "trails" {
   }
 
 }
+
 resource "aws_s3_bucket_versioning" "trails" {
   bucket = aws_s3_bucket.trails.id
   versioning_configuration {
@@ -87,8 +113,18 @@ resource "aws_s3_bucket_versioning" "trails" {
     mfa_delete = "Disabled"
   }
 }
-variable "expiry" {
-  type        = number
-  default     = 30
-  description = "Expire logs after this many days"
+
+# Object Lock only permits per-object locks until a default retention rule
+# exists. GOVERNANCE (not COMPLIANCE) so an authorised principal can still
+# correct a mistake, and 30 days sits well inside var.expiry so the lifecycle
+# rule is never blocked from expiring an object it owns.
+resource "aws_s3_bucket_object_lock_configuration" "trails" {
+  bucket = aws_s3_bucket.trails.id
+
+  rule {
+    default_retention {
+      mode = "GOVERNANCE"
+      days = 30
+    }
+  }
 }

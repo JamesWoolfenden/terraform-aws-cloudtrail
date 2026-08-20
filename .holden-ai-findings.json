@@ -1,0 +1,106 @@
+{
+  "findings": [
+    {
+      "confidence": "high",
+      "explanation": "Since April 2023 every new S3 bucket is created with Object Ownership = BucketOwnerEnforced, which disables ACLs outright. Applying an aws_s3_bucket_acl to such a bucket fails with AccessControlListNotSupported. The module creates no aws_s3_bucket_ownership_controls resource, so the bucket takes that default and this resource can never apply. No rule catches it because the failure lives in the absence of a third resource plus a provider-side default that changed date, not in any attribute of either resource present. The principle is a best-fit: this is apply-time correctness, not a security gap.",
+      "file": "aws_s3_bucket.trails.tf",
+      "first_seen": "2026-08-20",
+      "fixable": false,
+      "id": "HOLDEN_AI_001",
+      "last_seen": "2026-08-20",
+      "line": 81,
+      "principle": "reliability",
+      "related_resources": [
+        "aws_s3_bucket.trails"
+      ],
+      "remediation": "Add an aws_s3_bucket_ownership_controls with object_ownership = \"BucketOwnerPreferred\" and make the ACL depend on it, or drop aws_s3_bucket_acl entirely \u2014 BucketOwnerEnforced already gives the private-by-default behaviour acl = \"private\" was asking for, and the public access block covers the rest.",
+      "resource": "aws_s3_bucket_acl.trails",
+      "severity": "HIGH",
+      "status": "fixed",
+      "suppression_reason": null,
+      "title": "aws_s3_bucket_acl cannot apply: bucket has no ownership controls and defaults to BucketOwnerEnforced"
+    },
+    {
+      "confidence": "high",
+      "explanation": "var.is_organization_trail is a supported input, but an organization trail writes to <prefix>/AWSLogs/<org-id>/<account-id>/CloudTrail/... while the AWSCloudTrailWrite statement only permits arn:aws:s3:::<bucket>/<prefix>/AWSLogs/<account-id>/*. Turning the flag on therefore has CloudTrail rejected at the bucket-policy validation, or silently unable to deliver. The Glue table's storage_descriptor.location hardcodes the same non-org path, so Athena would query an empty prefix even if delivery worked. A rule cannot see this: it requires knowing that one variable's value changes the S3 key layout that a different resource's JSON string encodes.",
+      "file": "aws_s3_bucket.trails.tf",
+      "first_seen": "2026-08-20",
+      "fixable": false,
+      "id": "HOLDEN_AI_002",
+      "last_seen": "2026-08-20",
+      "line": 32,
+      "principle": "logging-and-monitoring",
+      "related_resources": [
+        "aws_cloudtrail.account",
+        "aws_glue_catalog_table.cloudtrail",
+        "var.is_organization_trail"
+      ],
+      "remediation": "Derive the AWSLogs path owner from a new var.organization_id (o-xxxxxxxxxx, default null) rather than data.aws_organizations_organization, which errors outright for any account not in an organization and would break every consumer without one. Grant both the account path and the org path in the bucket policy, as AWS's reference org-trail policy does, and guard the combination with a variable validation so is_organization_trail = true without an organization_id fails at plan time rather than mid-apply.",
+      "resource": "aws_s3_bucket_policy.trails",
+      "severity": "HIGH",
+      "status": "fixed",
+      "suppression_reason": null,
+      "title": "Setting is_organization_trail breaks log delivery: bucket policy and Glue table hardcode the non-org S3 path"
+    },
+    {
+      "confidence": "high",
+      "explanation": "The trust policy allows cloudtrail.amazonaws.com to assume the role with no aws:SourceAccount or aws:SourceArn condition. A service principal is not scoped to your account: any account's CloudTrail can ask the service to assume a role that trusts it, which is the confused-deputy pattern AWS documents for every service-principal trust. The attached policy is tight (logs:CreateLogStream / logs:PutLogEvents on one log group), so blast radius is log injection into your CloudWatch group rather than data theft \u2014 but the missing condition is the control AWS explicitly prescribes. HLD_AWS_276 only rejects wildcard principals, so a named service principal passes it.",
+      "file": "aws_cloudtrail.account.tf",
+      "first_seen": "2026-08-20",
+      "fix": "\"Condition\": {\n        \"StringEquals\": {\n          \"aws:SourceAccount\": \"${data.aws_caller_identity.current.account_id}\"\n        }\n      }",
+      "fixable": true,
+      "id": "HOLDEN_AI_003",
+      "last_seen": "2026-08-20",
+      "line": 32,
+      "principle": "identity-and-access",
+      "related_resources": [
+        "aws_iam_role_policy.cloudtrail"
+      ],
+      "remediation": "Add a Condition to the assume_role_policy statement: \"Condition\": {\"StringEquals\": {\"aws:SourceAccount\": \"<account-id>\"}} using data.aws_caller_identity.current.account_id, and ideally aws:SourceArn scoped to the trail ARN.",
+      "resource": "aws_iam_role.cloudtrail",
+      "severity": "MEDIUM",
+      "status": "fixed",
+      "suppression_reason": null,
+      "title": "CloudTrail service trust policy has no aws:SourceAccount condition (cross-account confused deputy)"
+    },
+    {
+      "confidence": "high",
+      "explanation": "Both the AWSCloudTrailAclCheck and AWSCloudTrailWrite statements grant cloudtrail.amazonaws.com with no aws:SourceArn condition. The write statement is largely self-limiting because its Resource pins the account ID into the key path, but AWSCloudTrailAclCheck grants s3:GetBucketAcl on the bucket to any account's CloudTrail, letting an outsider who guesses the bucket name (trails-<account-id>, entirely predictable) confirm it exists. AWS's own reference policy carries aws:SourceArn on both statements for this reason.",
+      "file": "aws_s3_bucket.trails.tf",
+      "first_seen": "2026-08-20",
+      "fixable": false,
+      "id": "HOLDEN_AI_004",
+      "last_seen": "2026-08-20",
+      "line": 17,
+      "principle": "identity-and-access",
+      "related_resources": [
+        "aws_cloudtrail.account"
+      ],
+      "remediation": "Add \"Condition\": {\"StringEquals\": {\"aws:SourceArn\": \"arn:aws:cloudtrail:<region>:<account>:trail/<name>\"}} to both statements, building the ARN from data sources and var.trail[\"name\"] rather than referencing aws_cloudtrail.account.arn, which would invert the dependency order.",
+      "resource": "aws_s3_bucket_policy.trails",
+      "severity": "LOW",
+      "status": "fixed",
+      "suppression_reason": null,
+      "title": "S3 bucket policy grants CloudTrail service principal without aws:SourceArn"
+    }
+  ],
+  "scan_date": "2026-08-20T00:00:00Z",
+  "scan_path": ".",
+  "suggested_policies": [
+    {
+      "implemented_as": "HLD_AWS_315",
+      "implemented_in": "JamesWoolfenden/holden@main",
+      "rationale": "An aws_s3_bucket_acl with no aws_s3_bucket_ownership_controls in the same configuration is a guaranteed apply failure on any bucket created after April 2023, when BucketOwnerEnforced became the default and ACLs stopped being accepted. It is a pure companion-resource condition on a specific resource type, fires correctly on any Terraform using aws_s3_bucket_acl, and neither HLD_AWS_290 nor HLD_AWS_296 (the only two policies covering aws_s3_bucket_acl) touches ownership controls.",
+      "status": "implemented",
+      "yaml": "id: HLD_AWS_315\nname: S3 bucket ACLs require explicit ownership controls\nprinciple: reliability\nseverity: MEDIUM\nrationale: |\n  Since April 2023 new S3 buckets default to Object Ownership =\n  BucketOwnerEnforced, which disables ACLs entirely. Applying an\n  aws_s3_bucket_acl to such a bucket fails with AccessControlListNotSupported.\n  An aws_s3_bucket_acl is therefore only applyable when an\n  aws_s3_bucket_ownership_controls resource explicitly sets\n  BucketOwnerPreferred or ObjectWriter first.\nremediation: |\n  Either drop the ACL \u2014 BucketOwnerEnforced already denies public access, and\n  an aws_s3_bucket_public_access_block covers the rest \u2014 or declare the\n  ownership controls the ACL depends on:\n\n    resource \"aws_s3_bucket_ownership_controls\" \"example\" {\n      bucket = aws_s3_bucket.example.id\n      rule {\n        object_ownership = \"BucketOwnerPreferred\"\n      }\n    }\n\n    resource \"aws_s3_bucket_acl\" \"example\" {\n      bucket     = aws_s3_bucket.example.id\n      acl        = \"private\"\n      depends_on = [aws_s3_bucket_ownership_controls.example]\n    }\ncompliance:\n  checkov: CKV2_AWS_65\nresources:\n  aws_s3_bucket_acl:\n    requires_companion:\n      type: aws_s3_bucket_ownership_controls\n      linked_via:\n        from: bucket\n        to: bucket\n"
+    },
+    {
+      "implemented_as": "HLD_AWS_316",
+      "implemented_in": "JamesWoolfenden/holden@main",
+      "rationale": "An IAM trust policy naming an AWS service principal with no aws:SourceAccount or aws:SourceArn condition is the documented confused-deputy shape, and it is statically decidable from the assume_role_policy JSON alone: a Statement whose Principal.Service is set but which carries no Condition constraining the calling account. HLD_AWS_276 covers only wildcard principals, so every named service principal passes today. Applies to any provider resource using assume_role_policy.",
+      "status": "implemented",
+      "yaml": "id: HLD_AWS_316\nname: Service-principal trust policies must be scoped by source account or ARN\nprinciple: identity-and-access\nseverity: MEDIUM\nrationale: |\n  An AWS service principal such as cloudtrail.amazonaws.com is not scoped to\n  your account. Any customer's resource in that service can ask the service to\n  assume a role that trusts it, so a trust policy naming a service principal\n  without an aws:SourceAccount or aws:SourceArn condition can be exercised on\n  behalf of a resource you do not own \u2014 the confused-deputy pattern AWS\n  documents for every service-to-service trust.\nremediation: |\n  Constrain the trust statement to your own account or the specific resource:\n\n    assume_role_policy = jsonencode({\n      Version = \"2012-10-17\"\n      Statement = [{\n        Effect    = \"Allow\"\n        Principal = { Service = \"cloudtrail.amazonaws.com\" }\n        Action    = \"sts:AssumeRole\"\n        Condition = {\n          StringEquals = {\n            \"aws:SourceAccount\" = data.aws_caller_identity.current.account_id\n          }\n        }\n      }]\n    })\nresources:\n  aws_iam_role:\n    path: assume_role_policy\n    json_decode: true\n    sub_path: Statement\n    not_any:\n      all:\n        - path: Principal.Service\n          not_null: true\n        - path: Condition\n          absent: true\n"
+    }
+  ],
+  "suggested_suppressions": []
+}

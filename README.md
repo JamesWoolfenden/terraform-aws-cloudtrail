@@ -5,7 +5,6 @@
 [![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/JamesWoolfenden/terraform-aws-cloudtrail.svg?label=latest)](https://github.com/JamesWoolfenden/terraform-aws-cloudtrail/releases/latest)
 ![Terraform Version](https://img.shields.io/badge/tf-%3E%3D0.14.0-blue.svg)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
-[![checkov](https://img.shields.io/badge/checkov-verified-brightgreen)](https://www.checkov.io/)
 
 This is an updated example for using Cloudtrail that works, in addition to the trail Glue is added to support querying in Athena.
 
@@ -30,8 +29,6 @@ module "cloudtrail" {
 ```
 
 ## Checks
-
-This module has a Checkov skip added as the MFA_delete functionality is currently broken in Terraform 0.12.8. I have added an ignore so that you can manually update this item without interference.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -61,13 +58,15 @@ No modules.
 | [aws_kms_alias.trails](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_alias) | resource |
 | [aws_kms_key.cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) | resource |
 | [aws_s3_bucket.trails](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
-| [aws_s3_bucket_acl.trails](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_acl) | resource |
 | [aws_s3_bucket_lifecycle_configuration.trails](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_lifecycle_configuration) | resource |
+| [aws_s3_bucket_logging.trails](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_logging) | resource |
+| [aws_s3_bucket_object_lock_configuration.trails](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_object_lock_configuration) | resource |
 | [aws_s3_bucket_policy.trails](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
 | [aws_s3_bucket_public_access_block.trails](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
 | [aws_s3_bucket_server_side_encryption_configuration.trails](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
 | [aws_s3_bucket_versioning.trails](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_versioning) | resource |
 | [aws_sns_topic.cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic) | resource |
+| [aws_sns_topic_policy.cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic_policy) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_cloudtrail_service_account.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/cloudtrail_service_account) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
@@ -76,24 +75,27 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
+| <a name="input_access_log_bucket"></a> [access\_log\_bucket](#input\_access\_log\_bucket) | Bucket receiving S3 server access logs for the trails bucket. Defaults to s3accesslogging-<account\_id>, which must already exist | `string` | `null` | no |
 | <a name="input_enable_log_file_validation"></a> [enable\_log\_file\_validation](#input\_enable\_log\_file\_validation) | Bool to enable log file validation | `bool` | `true` | no |
 | <a name="input_enable_logging"></a> [enable\_logging](#input\_enable\_logging) | Toggle logging | `bool` | `true` | no |
-| <a name="input_expiry"></a> [expiry](#input\_expiry) | Expire logs after this many days | `number` | `30` | no |
+| <a name="input_expiry"></a> [expiry](#input\_expiry) | Expire logs after this many days. Matches retention\_in\_days so the S3 and CloudWatch copies of the trail age out together | `number` | `365` | no |
 | <a name="input_is_multi_region_trail"></a> [is\_multi\_region\_trail](#input\_is\_multi\_region\_trail) | Is this a multi-region trail? Secure option is default | `bool` | `true` | no |
 | <a name="input_is_organization_trail"></a> [is\_organization\_trail](#input\_is\_organization\_trail) | Is this for an organisation? | `bool` | `false` | no |
-| <a name="input_log_group_name"></a> [log\_group\_name](#input\_log\_group\_name) | n/a | `string` | `"cloudtrail"` | no |
-| <a name="input_retention_in_days"></a> [retention\_in\_days](#input\_retention\_in\_days) | n/a | `number` | `90` | no |
-| <a name="input_trail"></a> [trail](#input\_trail) | Basic Settings for Cloudtrail | `map(any)` | <pre>{<br/>  "include_global_service_events": false,<br/>  "name": "tf-trail-account",<br/>  "s3_key_prefix": "prefix"<br/>}</pre> | no |
+| <a name="input_log_group_name"></a> [log\_group\_name](#input\_log\_group\_name) | Name of the CloudWatch log group CloudTrail delivers events to | `string` | `"cloudtrail"` | no |
+| <a name="input_organization_id"></a> [organization\_id](#input\_organization\_id) | AWS Organizations id (o-xxxxxxxxxx). Required when is\_organization\_trail is true, because an organization trail writes to AWSLogs/<org-id>/<account-id>/ rather than AWSLogs/<account-id>/ | `string` | `null` | no |
+| <a name="input_retention_in_days"></a> [retention\_in\_days](#input\_retention\_in\_days) | Days to retain events in the CloudWatch log group. 0 retains them indefinitely | `number` | `365` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to every taggable resource this module creates | `map(string)` | `{}` | no |
+| <a name="input_trail"></a> [trail](#input\_trail) | Basic Settings for Cloudtrail | `map(any)` | <pre>{<br/>  "include_global_service_events": true,<br/>  "name": "tf-trail-account",<br/>  "s3_key_prefix": "prefix"<br/>}</pre> | no |
 
 ## Outputs
 
 | Name | Description |
 | ---- | ----------- |
-| <a name="output_bucket"></a> [bucket](#output\_bucket) | n/a |
-| <a name="output_kms"></a> [kms](#output\_kms) | n/a |
-| <a name="output_log_group"></a> [log\_group](#output\_log\_group) | n/a |
-| <a name="output_service_account"></a> [service\_account](#output\_service\_account) | n/a |
-| <a name="output_trail"></a> [trail](#output\_trail) | n/a |
+| <a name="output_bucket"></a> [bucket](#output\_bucket) | The S3 bucket holding the trail log files |
+| <a name="output_kms"></a> [kms](#output\_kms) | The KMS key encrypting the trail log files |
+| <a name="output_log_group"></a> [log\_group](#output\_log\_group) | The CloudWatch log group CloudTrail delivers events to |
+| <a name="output_service_account"></a> [service\_account](#output\_service\_account) | The CloudTrail service account for the current region |
+| <a name="output_trail"></a> [trail](#output\_trail) | The CloudTrail trail resource |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Policy
@@ -102,6 +104,7 @@ No modules.
 The Terraform resource required is:
 
 ```golang
+# apply role — full permissions for terraform apply
 resource "aws_iam_policy" "terraform_pike" {
   name_prefix = "terraform_pike"
   path        = "/"
@@ -114,12 +117,15 @@ resource "aws_iam_policy" "terraform_pike" {
             "Sid": "VisualEditor0",
             "Effect": "Allow",
             "Action": [
+                "cloudtrail:AddTags",
                 "cloudtrail:CreateTrail",
                 "cloudtrail:DeleteTrail",
                 "cloudtrail:DescribeTrails",
                 "cloudtrail:GetEventSelectors",
                 "cloudtrail:GetTrailStatus",
                 "cloudtrail:ListTags",
+                "cloudtrail:PutEventSelectors",
+                "cloudtrail:RemoveTags",
                 "cloudtrail:StartLogging",
                 "cloudtrail:UpdateTrail"
             ],
@@ -129,6 +135,16 @@ resource "aws_iam_policy" "terraform_pike" {
         },
         {
             "Sid": "VisualEditor1",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:DescribeAccountAttributes"
+            ],
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Sid": "VisualEditor2",
             "Effect": "Allow",
             "Action": [
                 "glue:CreateDatabase",
@@ -145,7 +161,7 @@ resource "aws_iam_policy" "terraform_pike" {
             ]
         },
         {
-            "Sid": "VisualEditor2",
+            "Sid": "VisualEditor3",
             "Effect": "Allow",
             "Action": [
                 "iam:CreateRole",
@@ -157,14 +173,16 @@ resource "aws_iam_policy" "terraform_pike" {
                 "iam:ListInstanceProfilesForRole",
                 "iam:ListRolePolicies",
                 "iam:PassRole",
-                "iam:PutRolePolicy"
+                "iam:PutRolePolicy",
+                "iam:TagRole",
+                "iam:UntagRole"
             ],
             "Resource": [
                 "*"
             ]
         },
         {
-            "Sid": "VisualEditor3",
+            "Sid": "VisualEditor4",
             "Effect": "Allow",
             "Action": [
                 "kms:CreateAlias",
@@ -178,6 +196,8 @@ resource "aws_iam_policy" "terraform_pike" {
                 "kms:ListResourceTags",
                 "kms:PutKeyPolicy",
                 "kms:ScheduleKeyDeletion",
+                "kms:TagResource",
+                "kms:UntagResource",
                 "kms:UpdateAlias"
             ],
             "Resource": [
@@ -185,7 +205,7 @@ resource "aws_iam_policy" "terraform_pike" {
             ]
         },
         {
-            "Sid": "VisualEditor4",
+            "Sid": "VisualEditor5",
             "Effect": "Allow",
             "Action": [
                 "logs:AssociateKmsKey",
@@ -196,14 +216,16 @@ resource "aws_iam_policy" "terraform_pike" {
                 "logs:DisassociateKmsKey",
                 "logs:ListTagsForResource",
                 "logs:ListTagsLogGroup",
-                "logs:PutRetentionPolicy"
+                "logs:PutRetentionPolicy",
+                "logs:TagLogGroup",
+                "logs:UntagLogGroup"
             ],
             "Resource": [
                 "*"
             ]
         },
         {
-            "Sid": "VisualEditor5",
+            "Sid": "VisualEditor6",
             "Effect": "Allow",
             "Action": [
                 "s3:CreateBucket",
@@ -225,29 +247,95 @@ resource "aws_iam_policy" "terraform_pike" {
                 "s3:GetObject",
                 "s3:GetObjectAcl",
                 "s3:GetReplicationConfiguration",
-                "s3:ListAllMyBuckets",
                 "s3:ListBucket",
-                "s3:PutBucketAcl",
                 "s3:PutBucketLogging",
+                "s3:PutBucketObjectLockConfiguration",
                 "s3:PutBucketPolicy",
                 "s3:PutBucketPublicAccessBlock",
+                "s3:PutBucketTagging",
                 "s3:PutBucketVersioning",
                 "s3:PutEncryptionConfiguration",
-                "s3:PutLifecycleConfiguration"
+                "s3:PutLifecycleConfiguration",
+                "s3:PutObject",
+                "s3:PutObjectLegalHold",
+                "s3:PutObjectRetention"
             ],
             "Resource": [
                 "*"
             ]
         },
         {
-            "Sid": "VisualEditor6",
+            "Sid": "VisualEditor7",
             "Effect": "Allow",
             "Action": [
                 "sns:CreateTopic",
                 "sns:DeleteTopic",
                 "sns:GetTopicAttributes",
                 "sns:ListTagsForResource",
-                "sns:SetTopicAttributes"
+                "sns:SetTopicAttributes",
+                "sns:TagResource",
+                "sns:UnTagResource"
+            ],
+            "Resource": [
+                "*"
+            ]
+        }
+    ]
+})
+}
+
+# plan role — read-only permissions for terraform plan
+resource "aws_iam_policy" "terraform_pike_plan" {
+  name_prefix = "terraform_pike_plan"
+  path        = "/"
+  description = "Pike Autogenerated policy from IAC"
+
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "glue:UpdateTable"
+            ],
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Sid": "VisualEditor1",
+            "Effect": "Allow",
+            "Action": [
+                "kms:DescribeKey",
+                "kms:GetKeyPolicy",
+                "kms:GetKeyRotationStatus",
+                "kms:ListResourceTags"
+            ],
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Sid": "VisualEditor2",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetAccelerateConfiguration",
+                "s3:GetBucketAcl",
+                "s3:GetBucketCORS",
+                "s3:GetBucketLogging",
+                "s3:GetBucketObjectLockConfiguration",
+                "s3:GetBucketPolicy",
+                "s3:GetBucketRequestPayment",
+                "s3:GetBucketTagging",
+                "s3:GetBucketVersioning",
+                "s3:GetBucketWebsite",
+                "s3:GetEncryptionConfiguration",
+                "s3:GetLifecycleConfiguration",
+                "s3:GetObject",
+                "s3:GetObjectAcl",
+                "s3:GetReplicationConfiguration",
+                "s3:ListBucket"
             ],
             "Resource": [
                 "*"

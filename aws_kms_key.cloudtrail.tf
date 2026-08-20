@@ -1,7 +1,11 @@
 resource "aws_kms_key" "cloudtrail" {
-  # checkov:skip=CKV2_AWS_64: For example only, key policy managed via IAM
-  # checkov:skip=CKV_AWS_33: Key policy not iam policy
-  enable_key_rotation = true
+  tags                    = var.tags
+  enable_key_rotation     = true
+  deletion_window_in_days = 30
+
+  lifecycle {
+    prevent_destroy = true
+  }
 
   policy = <<POLICY
 {
@@ -41,9 +45,10 @@ resource "aws_kms_key" "cloudtrail" {
             "Resource": "*"
         },
         {
+            "Sid": "Allow CloudWatch Logs to use the key",
             "Effect": "Allow",
             "Principal": {
-                "Service": "logs.${data.aws_region.current.name}.amazonaws.com"
+                "Service": "logs.${data.aws_region.current.region}.amazonaws.com"
             },
             "Action": [
                 "kms:Encrypt*",
@@ -55,7 +60,7 @@ resource "aws_kms_key" "cloudtrail" {
             "Resource": "*",
             "Condition": {
                 "ArnEquals": {
-                    "kms:EncryptionContext:aws:logs:arn": "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:${var.log_group_name}"
+                    "kms:EncryptionContext:aws:logs:arn": "arn:aws:logs:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:log-group:${var.log_group_name}"
                 }
             }
         },
@@ -63,42 +68,7 @@ resource "aws_kms_key" "cloudtrail" {
             "Sid": "Allow principals in the account to decrypt log files",
             "Effect": "Allow",
             "Principal": {
-                "AWS": "*"
-            },
-            "Action": [
-                "kms:Decrypt",
-                "kms:ReEncryptFrom"
-            ],
-            "Resource": "*",
-            "Condition": {
-                "StringEquals": {
-                    "kms:CallerAccount": "${data.aws_caller_identity.current.account_id}"
-                },
-                "StringLike": {
-                    "kms:EncryptionContext:aws:cloudtrail:arn": "arn:aws:cloudtrail:*:${data.aws_caller_identity.current.account_id}:trail/*"
-                }
-            }
-        },
-        {
-            "Sid": "Allow alias creation during setup",
-            "Effect": "Allow",
-            "Principal": {
-                "AWS": "*"
-            },
-            "Action": "kms:CreateAlias",
-            "Resource": "*",
-            "Condition": {
-                "StringEquals": {
-                    "kms:ViaService": "ec2.us-west-2.amazonaws.com",
-                    "kms:CallerAccount": "${data.aws_caller_identity.current.account_id}"
-                }
-            }
-        },
-        {
-            "Sid": "Enable cross account log decryption",
-            "Effect": "Allow",
-            "Principal": {
-                "AWS": "*"
+                "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
             },
             "Action": [
                 "kms:Decrypt",
@@ -118,6 +88,7 @@ resource "aws_kms_key" "cloudtrail" {
 }
 POLICY
 }
+
 resource "aws_kms_alias" "trails" {
   name          = "alias/cloudtrail"
   target_key_id = aws_kms_key.cloudtrail.key_id

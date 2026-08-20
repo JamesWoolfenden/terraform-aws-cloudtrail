@@ -1,15 +1,20 @@
 output "service_account" {
-  value = data.aws_cloudtrail_service_account.main
+  description = "The CloudTrail service account for the current region"
+  value       = data.aws_cloudtrail_service_account.main
 }
 output "trail" {
-  value = aws_cloudtrail.account
+  description = "The CloudTrail trail resource"
+  value       = aws_cloudtrail.account
 }
 output "bucket" {
-  value = aws_s3_bucket.trails
+  description = "The S3 bucket holding the trail log files"
+  value       = aws_s3_bucket.trails
 }
 output "kms" {
-  value = aws_kms_key.cloudtrail
+  description = "The KMS key encrypting the trail log files"
+  value       = aws_kms_key.cloudtrail
 }
 output "log_group" {
-  value = aws_cloudwatch_log_group.trails
+  description = "The CloudWatch log group CloudTrail delivers events to"
+  value       = aws_cloudwatch_log_group.trails
 }

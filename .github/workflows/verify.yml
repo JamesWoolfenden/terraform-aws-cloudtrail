@@ -11,5 +11,6 @@ permissions:
   contents: write
 
 jobs:
+  # holden:ignore:HLD_CI_017: tracking @main deliberately to pick up CI improvements from this org's own shared workflow repo
   verify:
     uses: JamesWoolfenden/.github/.github/workflows/terraform-verify.yml@main

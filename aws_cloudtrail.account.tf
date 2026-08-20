@@ -1,8 +1,8 @@
 resource "aws_cloudtrail" "account" {
+  tags                          = var.tags
   name                          = var.trail["name"]
   cloud_watch_logs_role_arn     = aws_iam_role.cloudtrail.arn
-  depends_on                    = [aws_s3_bucket.trails]
-  enable_log_file_validation    = true
+  enable_log_file_validation    = var.enable_log_file_validation
   enable_logging                = var.enable_logging
   include_global_service_events = var.trail["include_global_service_events"]
   is_multi_region_trail         = var.is_multi_region_trail
@@ -12,8 +12,23 @@ resource "aws_cloudtrail" "account" {
   s3_key_prefix                 = var.trail["s3_key_prefix"]
   sns_topic_name                = aws_sns_topic.cloudtrail.name
   cloud_watch_logs_group_arn    = "${aws_cloudwatch_log_group.trails.arn}:*"
+
+  # CreateTrail validates the SNS topic policy up front, and nothing in this
+  # resource references the policy, so the ordering has to be explicit.
+  depends_on = [aws_sns_topic_policy.cloudtrail]
+
+  event_selector {
+    read_write_type           = "All"
+    include_management_events = true
+  }
 }
+
 resource "aws_iam_role" "cloudtrail" {
+  tags = var.tags
+  # Assumed only by the CloudTrail service for discrete per-delivery work, so
+  # the AWS floor of one hour is all this role ever needs.
+  max_session_duration = 3600
+
   assume_role_policy = <<POLICY
 {
   "Version": "2012-10-17",
@@ -24,17 +39,19 @@ resource "aws_iam_role" "cloudtrail" {
       "Principal": {
         "Service": "cloudtrail.amazonaws.com"
       },
-      "Action": "sts:AssumeRole"
+      "Action": "sts:AssumeRole",
+      "Condition": {
+        "StringEquals": {
+          "aws:SourceAccount": "${data.aws_caller_identity.current.account_id}"
+        }
+      }
     }
   ]
 }
 POLICY
 }
+
 resource "aws_iam_role_policy" "cloudtrail" {
-  # checkov:skip=CKV_AWS_290: Policy requires broad access for this module to function
-  # checkov:skip=CKV_AWS_355: Policy requires broad access for this module to function
-  # checkov:skip=CKV_AWS_272: Policy requires broad access for this module to function
-  # checkov:skip=CKV_AWS_356: Policy requires broad access for this module to function
   role   = aws_iam_role.cloudtrail.name
   policy = <<POLICY
 {
@@ -48,7 +65,7 @@ resource "aws_iam_role_policy" "cloudtrail" {
         "logs:CreateLogStream"
       ],
       "Resource": [
-        "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:${var.log_group_name}:log-stream:*"
+        "arn:aws:logs:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:log-group:${var.log_group_name}:log-stream:*"
       ]
 
     },
@@ -59,7 +76,7 @@ resource "aws_iam_role_policy" "cloudtrail" {
         "logs:PutLogEvents"
       ],
       "Resource": [
-        "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:${var.log_group_name}:log-stream:*"
+        "arn:aws:logs:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:log-group:${var.log_group_name}:log-stream:*"
       ]
     }
   ]

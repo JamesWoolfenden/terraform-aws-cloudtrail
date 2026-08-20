@@ -1,0 +1,26 @@
+# Workspace-scoped policies have no HCL block to attach an inline
+# holden:ignore comment to, so they are skipped here instead.
+skip_policies:
+  # CloudTrail is one cohesive unit — trail, KMS key + alias, log group, IAM
+  # role + policy, SNS topic, Glue catalog, and the seven S3 sub-resources the
+  # AWS provider now requires. Splitting it along resource-type lines would
+  # produce modules that cannot be used independently.
+  - HLD_TF_073
+  # The permission count is the set CloudTrail inherently needs to deploy:
+  # cloudtrail, kms, s3, logs, iam, sns and glue. There is nothing to drop.
+  - HLD_TF_029
+  # Adding the Object Lock configuration pushes the pike-derived service count
+  # to 8. It is the same set CloudTrail already needs -- cloudtrail, s3, kms,
+  # logs, iam, sns and glue -- with nothing new to split out.
+  - HLD_TF_030
+
+# The two independent roots in this repo. A scan of "." alone walks only the
+# module graph reachable from the module's own files, so the example — which
+# reaches the module by relative path but is a root in its own right — has to
+# be listed separately or it goes unscanned. Applies to a bare `holden scan`;
+# an explicit path argument overrides these.
+scan_roots:
+  - path: .
+    targets: [gha]
+  - path: example/examplea
+    targets: [terraform]

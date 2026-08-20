@@ -3,10 +3,9 @@ resource "aws_glue_catalog_table" "cloudtrail" {
   database_name = aws_glue_catalog_database.cloudtrail.name
   owner         = "hadoop"
   parameters = {
-    "EXTERNAL"              = "TRUE"
-    "classification"        = "cloudtrail"
-    "comment"               = "CloudTrail table for ${local.trails_bucket} bucket"
-    "transient_lastDdlTime" = "1595852255"
+    "EXTERNAL"       = "TRUE"
+    "classification" = "cloudtrail"
+    "comment"        = "CloudTrail table for ${local.trails_bucket} bucket"
   }
 
   table_type = "EXTERNAL_TABLE"
@@ -14,7 +13,7 @@ resource "aws_glue_catalog_table" "cloudtrail" {
     bucket_columns            = []
     compressed                = false
     input_format              = "com.amazon.emr.cloudtrail.CloudTrailInputFormat"
-    location                  = "s3://${local.trails_bucket}/${var.trail["s3_key_prefix"]}/AWSLogs/${data.aws_caller_identity.current.account_id}/CloudTrail"
+    location                  = "s3://${local.trails_bucket}/${var.trail["s3_key_prefix"]}/AWSLogs/${local.log_path_owner}/CloudTrail"
     number_of_buckets         = -1
     output_format             = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
     parameters                = {}
