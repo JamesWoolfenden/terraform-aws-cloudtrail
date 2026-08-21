@@ -51,6 +51,34 @@ No modules.
 | ---- | ---- |
 | [aws_cloudtrail.account](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudtrail) | resource |
 | [aws_cloudwatch_log_group.trails](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
+| [aws_cloudwatch_log_metric_filter.aws_config_changes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_metric_filter) | resource |
+| [aws_cloudwatch_log_metric_filter.cloudtrail_config_changes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_metric_filter) | resource |
+| [aws_cloudwatch_log_metric_filter.console_auth_failures](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_metric_filter) | resource |
+| [aws_cloudwatch_log_metric_filter.console_signin_without_mfa](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_metric_filter) | resource |
+| [aws_cloudwatch_log_metric_filter.disable_or_delete_cmk](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_metric_filter) | resource |
+| [aws_cloudwatch_log_metric_filter.iam_policy_changes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_metric_filter) | resource |
+| [aws_cloudwatch_log_metric_filter.network_acl_changes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_metric_filter) | resource |
+| [aws_cloudwatch_log_metric_filter.network_gateway_changes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_metric_filter) | resource |
+| [aws_cloudwatch_log_metric_filter.root_account_usage](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_metric_filter) | resource |
+| [aws_cloudwatch_log_metric_filter.route_table_changes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_metric_filter) | resource |
+| [aws_cloudwatch_log_metric_filter.s3_bucket_policy_changes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_metric_filter) | resource |
+| [aws_cloudwatch_log_metric_filter.security_group_changes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_metric_filter) | resource |
+| [aws_cloudwatch_log_metric_filter.unauthorized_api_calls](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_metric_filter) | resource |
+| [aws_cloudwatch_log_metric_filter.vpc_changes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_metric_filter) | resource |
+| [aws_cloudwatch_metric_alarm.aws_config_changes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
+| [aws_cloudwatch_metric_alarm.cloudtrail_config_changes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
+| [aws_cloudwatch_metric_alarm.console_auth_failures](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
+| [aws_cloudwatch_metric_alarm.console_signin_without_mfa](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
+| [aws_cloudwatch_metric_alarm.disable_or_delete_cmk](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
+| [aws_cloudwatch_metric_alarm.iam_policy_changes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
+| [aws_cloudwatch_metric_alarm.network_acl_changes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
+| [aws_cloudwatch_metric_alarm.network_gateway_changes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
+| [aws_cloudwatch_metric_alarm.root_account_usage](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
+| [aws_cloudwatch_metric_alarm.route_table_changes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
+| [aws_cloudwatch_metric_alarm.s3_bucket_policy_changes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
+| [aws_cloudwatch_metric_alarm.security_group_changes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
+| [aws_cloudwatch_metric_alarm.unauthorized_api_calls](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
+| [aws_cloudwatch_metric_alarm.vpc_changes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm) | resource |
 | [aws_glue_catalog_database.cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/glue_catalog_database) | resource |
 | [aws_glue_catalog_table.cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/glue_catalog_table) | resource |
 | [aws_iam_role.cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
@@ -65,26 +93,30 @@ No modules.
 | [aws_s3_bucket_public_access_block.trails](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
 | [aws_s3_bucket_server_side_encryption_configuration.trails](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
 | [aws_s3_bucket_versioning.trails](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_versioning) | resource |
+| [aws_sns_topic.cis_alarms](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic) | resource |
 | [aws_sns_topic.cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic) | resource |
+| [aws_sns_topic_policy.cis_alarms](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic_policy) | resource |
 | [aws_sns_topic_policy.cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic_policy) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_cloudtrail_service_account.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/cloudtrail_service_account) | data source |
+| [aws_iam_policy_document.trails](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_access_log_bucket"></a> [access\_log\_bucket](#input\_access\_log\_bucket) | Bucket receiving S3 server access logs for the trails bucket. Defaults to s3accesslogging-<account\_id>, which must already exist | `string` | `null` | no |
+| <a name="input_access_log_bucket"></a> [access\_log\_bucket](#input\_access\_log\_bucket) | Bucket receiving S3 server access logs for the trails bucket. Defaults to s3accesslogging-ACCOUNT\_ID, which must already exist | `string` | `null` | no |
+| <a name="input_cis_alarm_period"></a> [cis\_alarm\_period](#input\_cis\_alarm\_period) | Seconds each CIS alarm aggregates its metric over before evaluating | `number` | `300` | no |
+| <a name="input_enable_cis_alarms"></a> [enable\_cis\_alarms](#input\_enable\_cis\_alarms) | Create the CIS 3.1-3.14 metric filters and alarms on the trail's log group, and the SNS topic they notify. Turn off where alarming is handled centrally rather than per trail | `bool` | `true` | no |
 | <a name="input_enable_log_file_validation"></a> [enable\_log\_file\_validation](#input\_enable\_log\_file\_validation) | Bool to enable log file validation | `bool` | `true` | no |
 | <a name="input_enable_logging"></a> [enable\_logging](#input\_enable\_logging) | Toggle logging | `bool` | `true` | no |
 | <a name="input_expiry"></a> [expiry](#input\_expiry) | Expire logs after this many days. Matches retention\_in\_days so the S3 and CloudWatch copies of the trail age out together | `number` | `365` | no |
 | <a name="input_is_multi_region_trail"></a> [is\_multi\_region\_trail](#input\_is\_multi\_region\_trail) | Is this a multi-region trail? Secure option is default | `bool` | `true` | no |
 | <a name="input_is_organization_trail"></a> [is\_organization\_trail](#input\_is\_organization\_trail) | Is this for an organisation? | `bool` | `false` | no |
 | <a name="input_log_group_name"></a> [log\_group\_name](#input\_log\_group\_name) | Name of the CloudWatch log group CloudTrail delivers events to | `string` | `"cloudtrail"` | no |
-| <a name="input_organization_id"></a> [organization\_id](#input\_organization\_id) | AWS Organizations id (o-xxxxxxxxxx). Required when is\_organization\_trail is true, because an organization trail writes to AWSLogs/<org-id>/<account-id>/ rather than AWSLogs/<account-id>/ | `string` | `null` | no |
+| <a name="input_organization_id"></a> [organization\_id](#input\_organization\_id) | AWS Organizations id (o-xxxxxxxxxx). Required when is\_organization\_trail is true, because an organization trail writes to AWSLogs/ORG\_ID/ACCOUNT\_ID/ rather than AWSLogs/ACCOUNT\_ID/ | `string` | `null` | no |
 | <a name="input_retention_in_days"></a> [retention\_in\_days](#input\_retention\_in\_days) | Days to retain events in the CloudWatch log group. 0 retains them indefinitely | `number` | `365` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to every taggable resource this module creates | `map(string)` | `{}` | no |
 | <a name="input_trail"></a> [trail](#input\_trail) | Basic Settings for Cloudtrail | `map(any)` | <pre>{<br/>  "include_global_service_events": true,<br/>  "name": "tf-trail-account",<br/>  "s3_key_prefix": "prefix"<br/>}</pre> | no |
 
 ## Outputs
@@ -92,6 +124,7 @@ No modules.
 | Name | Description |
 | ---- | ----------- |
 | <a name="output_bucket"></a> [bucket](#output\_bucket) | The S3 bucket holding the trail log files |
+| <a name="output_cis_alarm_topic"></a> [cis\_alarm\_topic](#output\_cis\_alarm\_topic) | The SNS topic the CIS 3.1-3.14 alarms notify. Null when enable\_cis\_alarms is false. Subscribe to it: an alarm with no subscriber is not a detection |
 | <a name="output_kms"></a> [kms](#output\_kms) | The KMS key encrypting the trail log files |
 | <a name="output_log_group"></a> [log\_group](#output\_log\_group) | The CloudWatch log group CloudTrail delivers events to |
 | <a name="output_service_account"></a> [service\_account](#output\_service\_account) | The CloudTrail service account for the current region |
@@ -117,7 +150,6 @@ resource "aws_iam_policy" "terraform_pike" {
             "Sid": "VisualEditor0",
             "Effect": "Allow",
             "Action": [
-                "cloudtrail:AddTags",
                 "cloudtrail:CreateTrail",
                 "cloudtrail:DeleteTrail",
                 "cloudtrail:DescribeTrails",
@@ -125,7 +157,6 @@ resource "aws_iam_policy" "terraform_pike" {
                 "cloudtrail:GetTrailStatus",
                 "cloudtrail:ListTags",
                 "cloudtrail:PutEventSelectors",
-                "cloudtrail:RemoveTags",
                 "cloudtrail:StartLogging",
                 "cloudtrail:UpdateTrail"
             ],
@@ -137,7 +168,10 @@ resource "aws_iam_policy" "terraform_pike" {
             "Sid": "VisualEditor1",
             "Effect": "Allow",
             "Action": [
-                "ec2:DescribeAccountAttributes"
+                "cloudwatch:DeleteAlarms",
+                "cloudwatch:DescribeAlarms",
+                "cloudwatch:ListTagsForResource",
+                "cloudwatch:PutMetricAlarm"
             ],
             "Resource": [
                 "*"
@@ -145,6 +179,16 @@ resource "aws_iam_policy" "terraform_pike" {
         },
         {
             "Sid": "VisualEditor2",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:DescribeAccountAttributes"
+            ],
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Sid": "VisualEditor3",
             "Effect": "Allow",
             "Action": [
                 "glue:CreateDatabase",
@@ -161,7 +205,7 @@ resource "aws_iam_policy" "terraform_pike" {
             ]
         },
         {
-            "Sid": "VisualEditor3",
+            "Sid": "VisualEditor4",
             "Effect": "Allow",
             "Action": [
                 "iam:CreateRole",
@@ -173,16 +217,14 @@ resource "aws_iam_policy" "terraform_pike" {
                 "iam:ListInstanceProfilesForRole",
                 "iam:ListRolePolicies",
                 "iam:PassRole",
-                "iam:PutRolePolicy",
-                "iam:TagRole",
-                "iam:UntagRole"
+                "iam:PutRolePolicy"
             ],
             "Resource": [
                 "*"
             ]
         },
         {
-            "Sid": "VisualEditor4",
+            "Sid": "VisualEditor5",
             "Effect": "Allow",
             "Action": [
                 "kms:CreateAlias",
@@ -196,8 +238,6 @@ resource "aws_iam_policy" "terraform_pike" {
                 "kms:ListResourceTags",
                 "kms:PutKeyPolicy",
                 "kms:ScheduleKeyDeletion",
-                "kms:TagResource",
-                "kms:UntagResource",
                 "kms:UpdateAlias"
             ],
             "Resource": [
@@ -205,27 +245,28 @@ resource "aws_iam_policy" "terraform_pike" {
             ]
         },
         {
-            "Sid": "VisualEditor5",
+            "Sid": "VisualEditor6",
             "Effect": "Allow",
             "Action": [
                 "logs:AssociateKmsKey",
                 "logs:CreateLogGroup",
                 "logs:DeleteLogGroup",
+                "logs:DeleteMetricFilter",
                 "logs:DeleteRetentionPolicy",
                 "logs:DescribeLogGroups",
+                "logs:DescribeMetricFilters",
                 "logs:DisassociateKmsKey",
                 "logs:ListTagsForResource",
                 "logs:ListTagsLogGroup",
-                "logs:PutRetentionPolicy",
-                "logs:TagLogGroup",
-                "logs:UntagLogGroup"
+                "logs:PutMetricFilter",
+                "logs:PutRetentionPolicy"
             ],
             "Resource": [
                 "*"
             ]
         },
         {
-            "Sid": "VisualEditor6",
+            "Sid": "VisualEditor7",
             "Effect": "Allow",
             "Action": [
                 "s3:CreateBucket",
@@ -252,7 +293,6 @@ resource "aws_iam_policy" "terraform_pike" {
                 "s3:PutBucketObjectLockConfiguration",
                 "s3:PutBucketPolicy",
                 "s3:PutBucketPublicAccessBlock",
-                "s3:PutBucketTagging",
                 "s3:PutBucketVersioning",
                 "s3:PutEncryptionConfiguration",
                 "s3:PutLifecycleConfiguration",
@@ -265,16 +305,14 @@ resource "aws_iam_policy" "terraform_pike" {
             ]
         },
         {
-            "Sid": "VisualEditor7",
+            "Sid": "VisualEditor8",
             "Effect": "Allow",
             "Action": [
                 "sns:CreateTopic",
                 "sns:DeleteTopic",
                 "sns:GetTopicAttributes",
                 "sns:ListTagsForResource",
-                "sns:SetTopicAttributes",
-                "sns:TagResource",
-                "sns:UnTagResource"
+                "sns:SetTopicAttributes"
             ],
             "Resource": [
                 "*"

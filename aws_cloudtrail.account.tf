@@ -12,6 +12,13 @@ resource "aws_cloudtrail" "account" {
   sns_topic_name                = aws_sns_topic.cloudtrail.name
   cloud_watch_logs_group_arn    = "${aws_cloudwatch_log_group.trails.arn}:*"
 
+  # DeleteTrail is what CIS 3.5 alarms on, and an alarm reports the loss rather
+  # than preventing it. Nothing downstream of a deleted trail records that the
+  # deletion happened, so the config refuses to be the one that does it.
+  lifecycle {
+    prevent_destroy = true
+  }
+
   # CreateTrail validates the SNS topic policy up front, and nothing in this
   # resource references the policy, so the ordering has to be explicit.
   depends_on = [aws_sns_topic_policy.cloudtrail]

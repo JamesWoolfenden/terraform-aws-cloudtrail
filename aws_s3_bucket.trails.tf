@@ -4,61 +4,93 @@ resource "aws_s3_bucket" "trails" {
   # Object Lock cannot coexist with force_destroy: locked objects cannot be
   # deleted, so a forced teardown would fail part-way through regardless.
   object_lock_enabled = true
+
+  # Object Lock is a backstop, not a guarantee: retention runs 30 days from
+  # each object's write, so a bucket the trail stopped writing to becomes
+  # deletable, and GOVERNANCE mode yields to s3:BypassGovernanceRetention.
+  # Matches the KMS key, which the bucket's contents are unreadable without.
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_s3_bucket_policy" "trails" {
   bucket = aws_s3_bucket.trails.id
-  policy = <<POLICY
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "AWSCloudTrailAclCheck",
-            "Effect": "Allow",
-            "Principal": {
-              "Service": "cloudtrail.amazonaws.com"
-            },
-            "Action": "s3:GetBucketAcl",
-            "Resource": "arn:aws:s3:::${local.trails_bucket}",
-            "Condition": {
-                "StringEquals": {
-                    "aws:SourceArn": "${local.trail_arn}"
-                }
-            }
-        },
-        {
-            "Sid": "AWSCloudTrailWrite",
-            "Effect": "Allow",
-            "Principal": {
-              "Service": "cloudtrail.amazonaws.com"
-            },
-            "Action": "s3:PutObject",
-            "Resource": ${local.trail_write_resources},
-            "Condition": {
-                "StringEquals": {
-                    "s3:x-amz-acl": "bucket-owner-full-control",
-                    "aws:SourceArn": "${local.trail_arn}"
-                }
-            }
-        },
-        {
-            "Sid": "DenyInsecureTransport",
-            "Effect": "Deny",
-            "Principal": "*",
-            "Action": "s3:*",
-            "Resource": [
-                "arn:aws:s3:::${local.trails_bucket}",
-                "arn:aws:s3:::${local.trails_bucket}/*"
-            ],
-            "Condition": {
-                "Bool": {
-                    "aws:SecureTransport": "false"
-                }
-            }
-        }
-    ]
+  policy = data.aws_iam_policy_document.trails.json
 }
-POLICY
+
+# A policy document rather than a JSON heredoc: the write statement's resource
+# list varies with is_organization_trail, and interpolating a jsonencode() into
+# a heredoc produces a document no static analyser can read -- it left the
+# wildcard-principal and TLS checks permanently unevaluated.
+data "aws_iam_policy_document" "trails" {
+  statement {
+    sid    = "AWSCloudTrailAclCheck"
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["cloudtrail.amazonaws.com"]
+    }
+
+    actions   = ["s3:GetBucketAcl"]
+    resources = ["arn:aws:s3:::${local.trails_bucket}"]
+
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceArn"
+      values   = [local.trail_arn]
+    }
+  }
+
+  statement {
+    sid    = "AWSCloudTrailWrite"
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["cloudtrail.amazonaws.com"]
+    }
+
+    actions   = ["s3:PutObject"]
+    resources = local.trail_write_resources
+
+    condition {
+      test     = "StringEquals"
+      variable = "s3:x-amz-acl"
+      values   = ["bucket-owner-full-control"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceArn"
+      values   = [local.trail_arn]
+    }
+  }
+
+  # The wildcard principal is deliberate and only reachable on a Deny: it is
+  # what makes the TLS requirement apply to everyone rather than to a named set.
+  statement {
+    sid    = "DenyInsecureTransport"
+    effect = "Deny"
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    actions = ["s3:*"]
+    resources = [
+      "arn:aws:s3:::${local.trails_bucket}",
+      "arn:aws:s3:::${local.trails_bucket}/*",
+    ]
+
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values   = ["false"]
+    }
+  }
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "trails" {

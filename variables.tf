@@ -77,7 +77,7 @@ variable "expiry" {
 
 
 variable "access_log_bucket" {
-  description = "Bucket receiving S3 server access logs for the trails bucket. Defaults to s3accesslogging-<account_id>, which must already exist"
+  description = "Bucket receiving S3 server access logs for the trails bucket. Defaults to s3accesslogging-ACCOUNT_ID, which must already exist"
   type        = string
   default     = null
 
@@ -88,7 +88,7 @@ variable "access_log_bucket" {
 }
 
 variable "organization_id" {
-  description = "AWS Organizations id (o-xxxxxxxxxx). Required when is_organization_trail is true, because an organization trail writes to AWSLogs/<org-id>/<account-id>/ rather than AWSLogs/<account-id>/"
+  description = "AWS Organizations id (o-xxxxxxxxxx). Required when is_organization_trail is true, because an organization trail writes to AWSLogs/ORG_ID/ACCOUNT_ID/ rather than AWSLogs/ACCOUNT_ID/"
   type        = string
   default     = null
 
@@ -100,5 +100,22 @@ variable "organization_id" {
   validation {
     condition     = !var.is_organization_trail || var.organization_id != null
     error_message = "organization_id must be set when is_organization_trail is true, or CloudTrail cannot deliver to the bucket."
+  }
+}
+
+variable "enable_cis_alarms" {
+  description = "Create the CIS 3.1-3.14 metric filters and alarms on the trail's log group, and the SNS topic they notify. Turn off where alarming is handled centrally rather than per trail"
+  type        = bool
+  default     = true
+}
+
+variable "cis_alarm_period" {
+  description = "Seconds each CIS alarm aggregates its metric over before evaluating"
+  type        = number
+  default     = 300
+
+  validation {
+    condition     = contains([10, 30, 60, 300, 900, 3600], var.cis_alarm_period)
+    error_message = "cis_alarm_period must be one of the periods CloudWatch accepts: 10, 30, 60, 300, 900 or 3600."
   }
 }
