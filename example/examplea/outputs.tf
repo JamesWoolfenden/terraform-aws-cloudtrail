@@ -18,3 +18,11 @@ output "log_group" {
   description = "The CloudWatch log group CloudTrail delivers events to"
   value       = module.cloudtrail.log_group
 }
+output "cis_alarm_topic" {
+  description = "The SNS topic the CIS 3.1-3.14 alarms notify"
+  value       = module.cloudtrail.cis_alarm_topic
+}
+output "cis_alarm_subscriptions" {
+  description = "The subscriptions attached to the CIS alarm topic"
+  value       = module.cloudtrail.cis_alarm_subscriptions
+}

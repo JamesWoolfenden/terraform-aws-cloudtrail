@@ -119,3 +119,32 @@ variable "cis_alarm_period" {
     error_message = "cis_alarm_period must be one of the periods CloudWatch accepts: 10, 30, 60, 300, 900 or 3600."
   }
 }
+
+variable "cis_alarm_subscriptions" {
+  description = "Subscriptions to attach to the CIS alarm topic, as protocol/endpoint pairs. Empty by default because an endpoint is the consumer's to choose, but an alarm topic with no subscriber is not a detection"
+  type = list(object({
+    protocol = string
+    endpoint = string
+  }))
+  default = []
+
+  validation {
+    condition = alltrue([
+      for s in var.cis_alarm_subscriptions :
+      contains(["email", "email-json", "sms", "sqs", "https", "lambda", "application", "firehose"], s.protocol)
+    ])
+    error_message = "cis_alarm_subscriptions protocol must be one of email, email-json, sms, sqs, https, lambda, application or firehose. Note http is absent: the topic carries security alerts and must not be delivered in clear text."
+  }
+
+  validation {
+    condition = alltrue([
+      for s in var.cis_alarm_subscriptions : length(trimspace(s.endpoint)) > 0
+    ])
+    error_message = "cis_alarm_subscriptions endpoint must not be empty."
+  }
+
+  validation {
+    condition     = var.enable_cis_alarms || length(var.cis_alarm_subscriptions) == 0
+    error_message = "cis_alarm_subscriptions has no effect while enable_cis_alarms is false, and would silently subscribe nothing. Enable the alarms or drop the subscriptions."
+  }
+}

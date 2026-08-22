@@ -97,6 +97,7 @@ No modules.
 | [aws_sns_topic.cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic) | resource |
 | [aws_sns_topic_policy.cis_alarms](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic_policy) | resource |
 | [aws_sns_topic_policy.cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic_policy) | resource |
+| [aws_sns_topic_subscription.cis_alarms](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic_subscription) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_cloudtrail_service_account.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/cloudtrail_service_account) | data source |
 | [aws_iam_policy_document.trails](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
@@ -108,6 +109,7 @@ No modules.
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_access_log_bucket"></a> [access\_log\_bucket](#input\_access\_log\_bucket) | Bucket receiving S3 server access logs for the trails bucket. Defaults to s3accesslogging-ACCOUNT\_ID, which must already exist | `string` | `null` | no |
 | <a name="input_cis_alarm_period"></a> [cis\_alarm\_period](#input\_cis\_alarm\_period) | Seconds each CIS alarm aggregates its metric over before evaluating | `number` | `300` | no |
+| <a name="input_cis_alarm_subscriptions"></a> [cis\_alarm\_subscriptions](#input\_cis\_alarm\_subscriptions) | Subscriptions to attach to the CIS alarm topic, as protocol/endpoint pairs. Empty by default because an endpoint is the consumer's to choose, but an alarm topic with no subscriber is not a detection | <pre>list(object({<br/>    protocol = string<br/>    endpoint = string<br/>  }))</pre> | `[]` | no |
 | <a name="input_enable_cis_alarms"></a> [enable\_cis\_alarms](#input\_enable\_cis\_alarms) | Create the CIS 3.1-3.14 metric filters and alarms on the trail's log group, and the SNS topic they notify. Turn off where alarming is handled centrally rather than per trail | `bool` | `true` | no |
 | <a name="input_enable_log_file_validation"></a> [enable\_log\_file\_validation](#input\_enable\_log\_file\_validation) | Bool to enable log file validation | `bool` | `true` | no |
 | <a name="input_enable_logging"></a> [enable\_logging](#input\_enable\_logging) | Toggle logging | `bool` | `true` | no |
@@ -124,6 +126,7 @@ No modules.
 | Name | Description |
 | ---- | ----------- |
 | <a name="output_bucket"></a> [bucket](#output\_bucket) | The S3 bucket holding the trail log files |
+| <a name="output_cis_alarm_subscriptions"></a> [cis\_alarm\_subscriptions](#output\_cis\_alarm\_subscriptions) | The subscriptions attached to the CIS alarm topic. Empty means every CIS alarm fires into a topic nobody is listening to |
 | <a name="output_cis_alarm_topic"></a> [cis\_alarm\_topic](#output\_cis\_alarm\_topic) | The SNS topic the CIS 3.1-3.14 alarms notify. Null when enable\_cis\_alarms is false. Subscribe to it: an alarm with no subscriber is not a detection |
 | <a name="output_kms"></a> [kms](#output\_kms) | The KMS key encrypting the trail log files |
 | <a name="output_log_group"></a> [log\_group](#output\_log\_group) | The CloudWatch log group CloudTrail delivers events to |
@@ -150,6 +153,18 @@ resource "aws_iam_policy" "terraform_pike" {
             "Sid": "VisualEditor0",
             "Effect": "Allow",
             "Action": [
+                "SNS:GetSubscriptionAttributes",
+                "SNS:Subscribe",
+                "SNS:Unsubscribe"
+            ],
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Sid": "VisualEditor1",
+            "Effect": "Allow",
+            "Action": [
                 "cloudtrail:CreateTrail",
                 "cloudtrail:DeleteTrail",
                 "cloudtrail:DescribeTrails",
@@ -165,7 +180,7 @@ resource "aws_iam_policy" "terraform_pike" {
             ]
         },
         {
-            "Sid": "VisualEditor1",
+            "Sid": "VisualEditor2",
             "Effect": "Allow",
             "Action": [
                 "cloudwatch:DeleteAlarms",
@@ -178,7 +193,7 @@ resource "aws_iam_policy" "terraform_pike" {
             ]
         },
         {
-            "Sid": "VisualEditor2",
+            "Sid": "VisualEditor3",
             "Effect": "Allow",
             "Action": [
                 "ec2:DescribeAccountAttributes"
@@ -188,7 +203,7 @@ resource "aws_iam_policy" "terraform_pike" {
             ]
         },
         {
-            "Sid": "VisualEditor3",
+            "Sid": "VisualEditor4",
             "Effect": "Allow",
             "Action": [
                 "glue:CreateDatabase",
@@ -205,7 +220,7 @@ resource "aws_iam_policy" "terraform_pike" {
             ]
         },
         {
-            "Sid": "VisualEditor4",
+            "Sid": "VisualEditor5",
             "Effect": "Allow",
             "Action": [
                 "iam:CreateRole",
@@ -224,7 +239,7 @@ resource "aws_iam_policy" "terraform_pike" {
             ]
         },
         {
-            "Sid": "VisualEditor5",
+            "Sid": "VisualEditor6",
             "Effect": "Allow",
             "Action": [
                 "kms:CreateAlias",
@@ -245,7 +260,7 @@ resource "aws_iam_policy" "terraform_pike" {
             ]
         },
         {
-            "Sid": "VisualEditor6",
+            "Sid": "VisualEditor7",
             "Effect": "Allow",
             "Action": [
                 "logs:AssociateKmsKey",
@@ -266,7 +281,7 @@ resource "aws_iam_policy" "terraform_pike" {
             ]
         },
         {
-            "Sid": "VisualEditor7",
+            "Sid": "VisualEditor8",
             "Effect": "Allow",
             "Action": [
                 "s3:CreateBucket",
@@ -305,7 +320,7 @@ resource "aws_iam_policy" "terraform_pike" {
             ]
         },
         {
-            "Sid": "VisualEditor8",
+            "Sid": "VisualEditor9",
             "Effect": "Allow",
             "Action": [
                 "sns:CreateTopic",
