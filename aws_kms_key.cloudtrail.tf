@@ -64,6 +64,23 @@ resource "aws_kms_key" "cloudtrail" {
             }
         },
         {
+            "Sid": "Allow CloudWatch alarms to publish to the encrypted topic",
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "cloudwatch.amazonaws.com"
+            },
+            "Action": [
+                "kms:Decrypt",
+                "kms:GenerateDataKey*"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "StringEquals": {
+                    "aws:SourceAccount": "${data.aws_caller_identity.current.account_id}"
+                }
+            }
+        },
+        {
             "Sid": "Allow principals in the account to decrypt log files",
             "Effect": "Allow",
             "Principal": {
