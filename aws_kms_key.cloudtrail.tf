@@ -44,6 +44,23 @@ resource "aws_kms_key" "cloudtrail" {
             "Resource": "*"
         },
         {
+            "Sid": "Allow CloudTrail to publish to the encrypted notification topic",
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "cloudtrail.amazonaws.com"
+            },
+            "Action": [
+                "kms:GenerateDataKey*",
+                "kms:Decrypt"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "StringEquals": {
+                    "aws:SourceArn": "${local.trail_arn}"
+                }
+            }
+        },
+        {
             "Sid": "Allow CloudWatch Logs to use the key",
             "Effect": "Allow",
             "Principal": {
