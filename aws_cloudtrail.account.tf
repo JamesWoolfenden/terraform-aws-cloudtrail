@@ -19,9 +19,15 @@ resource "aws_cloudtrail" "account" {
     prevent_destroy = true
   }
 
-  # CreateTrail validates the SNS topic policy up front, and nothing in this
-  # resource references the policy, so the ordering has to be explicit.
-  depends_on = [aws_sns_topic_policy.cloudtrail]
+  # CreateTrail validates the SNS topic policy and the bucket policy up front,
+  # and checks it can use the CloudWatch Logs role, but nothing in this
+  # resource references any of those policies, so the ordering has to be
+  # explicit.
+  depends_on = [
+    aws_sns_topic_policy.cloudtrail,
+    aws_s3_bucket_policy.trails,
+    aws_iam_role_policy.cloudtrail,
+  ]
 
   event_selector {
     read_write_type           = "All"
